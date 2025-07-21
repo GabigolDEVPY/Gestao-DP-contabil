@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciamento DP & Contabilidade</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <h2><i class="fas fa-briefcase"></i> DP & Contabilidade</h2>
+      </div>
+      <ul class="nav-menu">
+        <li class="nav-item active" onclick="openTab(event, 'dashboard')">
+          <i class="fas fa-tachometer-alt"></i> Dashboard
+        </li>
+        <li class="nav-item" onclick="openTab(event, 'empresas')">
+          <i class="fas fa-building"></i> Empresas
+        </li>
+        <li class="nav-item" onclick="openTab(event, 'contas')">
+          <i class="fas fa-money-bill"></i> Contas
+        </li>
+        <li class="nav-item" onclick="openTab(event, 'relatorios')">
+          <i class="fas fa-chart-bar"></i> Relatórios
+        </li>
+        <li class="nav-item" onclick="exportData()">
+          <i class="fas fa-download"></i> Exportar Dados
+        </li>
+      </ul>
+    </nav>
+
+    <main class="main-content">
+      <header class="main-header">
+        <div class="search-bar">
+          <input type="text" id="searchInput" placeholder="Pesquisar empresas ou contas...">
+          <i class="fas fa-search"></i>
+        </div>
+        <div class="user-profile">
+          <span>Usuário</span>
+          <i class="fas fa-user-circle"></i>
+        </div>
+      </header>
+
+      <section id="dashboard" class="tab-content active">
+        <h2>Dashboard</h2>
+        <div class="dashboard-grid">
+          <div class="card">
+            <h3>Total de Empresas</h3>
+            <p id="totalEmpresas">0</p>
+          </div>
+          <div class="card">
+            <h3>Total de Contas</h3>
+            <p id="totalContas">0</p>
+          </div>
+          <div class="card">
+            <h3>Valor Total</h3>
+            <p id="valorTotal">R$ 0,00</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="empresas" class="tab-content">
+        <h2>Cadastro de Empresas</h2>
+        <form id="empresaForm">
+          <div class="form-group">
+            <label for="empresaId">ID da Empresa</label>
+            <input type="text" id="empresaId" placeholder="Digite o ID" required>
+          </div>
+          <div class="form-group">
+            <label for="empresaNome">Nome da Empresa</label>
+            <input type="text" id="empresaNome" placeholder="Digite o nome" required>
+          </div>
+          <div class="form-group">
+            <label for="empresaCnpj">CNPJ</label>
+            <input type="text" id="empresaCnpj" placeholder="XX.XXX.XXX/XXXX-XX">
+          </div>
+          <button type="submit" class="btn btn-primary">Cadastrar</button>
+        </form>
+        <div class="list-container">
+          <h3>Empresas Cadastradas</h3>
+          <ul id="empresaLista"></ul>
+        </div>
+      </section>
+
+      <section id="contas" class="tab-content">
+        <h2>Contas e Obrigações</h2>
+        <form id="contaForm">
+          <div class="form-group">
+            <label for="contaDesc">Descrição</label>
+            <input type="text" id="contaDesc" placeholder="Ex: Salário, INSS, FGTS" required>
+          </div>
+          <div class="form-group">
+            <label for="contaValor">Valor (R$)</label>
+            <input type="number" id="contaValor" step="0.01" min="0" placeholder="0.00" required>
+          </div>
+          <div class="form-group">
+            <label for="contaData">Data de Vencimento</label>
+            <input type="date" id="contaData" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Adicionar</button>
+        </form>
+        <div class="list-container">
+          <h3>Contas Registradas</h3>
+          <ul id="contaLista"></ul>
+        </div>
+      </section>
+
+      <section id="relatorios" class="tab-content">
+        <h2>Relatórios</h2>
+        <div class="report-container">
+          <h3>Resumo Financeiro</h3>
+          <canvas id="financialChart"></canvas>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
