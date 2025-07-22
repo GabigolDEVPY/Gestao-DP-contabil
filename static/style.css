@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+a {
+  text-decoration: none;
+}
+
 body {
   font-family: 'Inter', sans-serif;
   background: #f4f7fa;
@@ -229,6 +233,7 @@ ul {
 }
 
 li {
+  color: #1a202c;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -240,9 +245,10 @@ li {
 }
 
 li:hover {
+  color: white;
   transform: translateX(5px);
-  background: #edf2f7;
 }
+
 
 .delete-btn {
   padding: 8px 16px;
@@ -259,3 +265,4 @@ li:hover {
 canvas {
   max-width: 100%;
 }
+
