@@ -5,155 +5,309 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gerenciamento DP & Contabilidade</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
   <div class="app-container">
+    <!-- Sidebar Navigation -->
     <nav class="sidebar">
       <div class="sidebar-header">
         <h2><i class="fas fa-briefcase"></i> DP & Contabilidade</h2>
       </div>
       <ul class="nav-menu">
-          <a href="{{ url_for("dashboard.return_dashboard") }}">
-            <li class="nav-item active" onclick="openTab(event, 'dashboard')">
-              <i class="fas fa-tachometer-alt"></i> Dashboard
-            </li>
-          </a>
-
-          <a href="{{ url_for("gerenciamento.return_page") }}">
-            <li class="nav-item" onclick="openTab(event, 'Gerenciamento')">
-              <i class="fas fa-building"></i> Gerenciamento
-            </li>
-          </a>
-
-        <li class="nav-item" onclick="openTab(event, 'empresas')">
-          <i class="fas fa-building"></i> Empresas
-        </li>
-        <li class="nav-item" onclick="openTab(event, 'contas')">
-          <i class="fas fa-money-bill"></i> Contas
-        </li>
+        <a href="{{ url_for('dashboard.return_dashboard') }}">
+          <li class="nav-item active" onclick="openTab(event, 'dashboard')">
+            <i class="fas fa-tachometer-alt"></i> 
+            <span>Dashboard</span>
+          </li>
+        </a>
+        <a href="{{ url_for('gerenciamento.return_page')}}">
+          <li class="nav-item" onclick="openTab(event, 'gerenciamento')">
+            <i class="fas fa-cogs"></i> 
+            <span>Gerenciamento</span>
+          </li>
+        </a>
+        <a href="{{ url_for('empresas.return_page')}}">
+          <li class="nav-item" onclick="openTab(event, 'empresas')">
+            <i class="fas fa-building"></i> 
+            <span>Empresas</span>
+          </li>
+        </a>
+        <a href="{{ url_for('contas.return_page')}}">
+          <li class="nav-item" onclick="openTab(event, 'contas')">
+            <i class="fas fa-money-bill"></i> 
+            <span>Contas</span>
+          </li>
+        </a>
         <li class="nav-item" onclick="openTab(event, 'relatorios')">
-          <i class="fas fa-chart-bar"></i> Relatórios
+          <i class="fas fa-chart-bar"></i> 
+          <span>Relatórios</span>
         </li>
         <li class="nav-item" onclick="exportData()">
-          <i class="fas fa-download"></i> Exportar Dados
+          <i class="fas fa-download"></i> 
+          <span>Exportar Dados</span>
         </li>
       </ul>
     </nav>
 
+    <!-- Main Content -->
     <main class="main-content">
       <header class="main-header">
-        <div class="search-bar">
-          <input type="text" id="searchInput" placeholder="Pesquisar empresas ou contas...">
-          <i class="fas fa-search"></i>
+        <div class="search-container">
+          <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Pesquisar empresas ou contas...">
+            <i class="fas fa-search"></i>
+          </div>
         </div>
         <div class="user-profile">
-          <span>Usuário</span>
-          <i class="fas fa-user-circle"></i>
+          <span>Usuário Admin</span>
+          <div class="avatar">
+            <i class="fas fa-user-circle"></i>
+          </div>
         </div>
       </header>
 
       {% if aba=="dashboard" %}
         <section id="dashboard" class="tab-content active">
-          <h2>Dashboard</h2>
+          <div class="page-header">
+            <h1>Dashboard</h1>
+            <p>Visão geral do sistema de gerenciamento</p>
+          </div>
+          
           <div class="dashboard-grid">
-            <div class="card">
-              <h3>Total de Empresas</h3>
-              <p id="totalEmpresas">{{ valor.total }}</p>
+            <div class="metric-card">
+              <div class="metric-icon empresas">
+                <i class="fas fa-building"></i>
+              </div>
+              <div class="metric-content">
+                <h3>Total de Empresas</h3>
+                <p class="metric-value" id="totalEmpresas">{{ valor.total if valor else '0' }}</p>
+                <span class="metric-change positive">+12% este mês</span>
+              </div>
             </div>
-            <div class="card">
-              <h3>Total de Contas</h3>
-              <p id="totalContas">0</p>
+            
+            <div class="metric-card">
+              <div class="metric-icon contas">
+                <i class="fas fa-file-invoice"></i>
+              </div>
+              <div class="metric-content">
+                <h3>Total de Contas</h3>
+                <p class="metric-value" id="totalContas">0</p>
+                <span class="metric-change positive">+8% este mês</span>
+              </div>
             </div>
-            <div class="card">
-              <h3>Valor Total</h3>
-              <p id="valorTotal">R$ 0,00</p>
+            
+            <div class="metric-card">
+              <div class="metric-icon valor">
+                <i class="fas fa-dollar-sign"></i>
+              </div>
+              <div class="metric-content">
+                <h3>Valor Total</h3>
+                <p class="metric-value" id="valorTotal">R$ 0,00</p>
+                <span class="metric-change negative">-3% este mês</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="recent-activity">
+            <div class="activity-header">
+              <h3>Atividades Recentes</h3>
+              <button class="btn-outline">Ver todas</button>
+            </div>
+            <div class="activity-list">
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="fas fa-plus-circle"></i>
+                </div>
+                <div class="activity-content">
+                  <p><strong>Nova empresa cadastrada:</strong> Tech Solutions Ltda</p>
+                  <span class="activity-time">Há 2 horas</span>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="fas fa-edit"></i>
+                </div>
+                <div class="activity-content">
+                  <p><strong>Conta atualizada:</strong> INSS - Empresa ABC</p>
+                  <span class="activity-time">Há 4 horas</span>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
       {% elif aba=="empresas" %}
         <section id="empresas" class="tab-content active">
-          <h2>Cadastro de Empresas</h2>
-          <form id="empresaForm">
-            <div class="form-group">
-              <label for="empresaId">ID da Empresa</label>
-              <input type="text" id="empresaId" placeholder="Digite o ID" required>
+          <div class="page-header">
+            <h1>Cadastro de Empresas</h1>
+            <p>Gerencie todas as empresas do sistema</p>
+          </div>
+          
+          <div class="content-card">
+            <form id="empresaForm" class="form-grid">
+              <div class="form-group">
+                <label for="empresaId">ID da Empresa</label>
+                <input type="text" id="empresaId" placeholder="Digite o ID" required>
+              </div>
+              <div class="form-group">
+                <label for="empresaNome">Nome da Empresa</label>
+                <input type="text" id="empresaNome" placeholder="Digite o nome completo" required>
+              </div>
+              <div class="form-group">
+                <label for="empresaCnpj">CNPJ</label>
+                <input type="text" id="empresaCnpj" placeholder="XX.XXX.XXX/XXXX-XX" maxlength="18">
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-plus"></i> Cadastrar Empresa
+                </button>
+              </div>
+            </form>
+          </div>
+          
+          <div class="content-card">
+            <div class="card-header">
+              <h3>Empresas Cadastradas</h3>
             </div>
-            <div class="form-group">
-              <label for="empresaNome">Nome da Empresa</label>
-              <input type="text" id="empresaNome" placeholder="Digite o nome" required>
-            </div>
-            <div class="form-group">
-              <label for="empresaCnpj">CNPJ</label>
-              <input type="text" id="empresaCnpj" placeholder="XX.XXX.XXX/XXXX-XX">
-            </div>
-            <button type="submit" class="btn btn-primary">Cadastrar</button>
-          </form>
-          <div class="list-container">
-            <h3>Empresas Cadastradas</h3>
             <ul id="empresaLista"></ul>
           </div>
         </section>
 
       {% elif aba=="contas" %}  
         <section id="contas" class="tab-content active">
-          <h2>Contas e Obrigações</h2>
-          <form id="contaForm">
-            <div class="form-group">
-              <label for="contaDesc">Descrição</label>
-              <input type="text" id="contaDesc" placeholder="Ex: Salário, INSS, FGTS" required>
+          <div class="page-header">
+            <h1>Contas e Obrigações</h1>
+            <p>Controle todas as contas e obrigações fiscais</p>
+          </div>
+          
+          <div class="content-card">
+            <form id="contaForm" class="form-grid">
+              <div class="form-group">
+                <label for="contaDesc">Descrição</label>
+                <input type="text" id="contaDesc" placeholder="Ex: Salário, INSS, FGTS" required>
+              </div>
+              <div class="form-group">
+                <label for="contaValor">Valor (R$)</label>
+                <input type="number" id="contaValor" step="0.01" min="0" placeholder="0,00" required>
+              </div>
+              <div class="form-group">
+                <label for="contaData">Data de Vencimento</label>
+                <input type="date" id="contaData" required>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-plus"></i> Adicionar Conta
+                </button>
+              </div>
+            </form>
+          </div>
+          
+          <div class="content-card">
+            <div class="card-header">
+              <h3>Contas Registradas</h3>
             </div>
-            <div class="form-group">
-              <label for="contaValor">Valor (R$)</label>
-              <input type="number" id="contaValor" step="0.01" min="0" placeholder="0.00" required>
-            </div>
-            <div class="form-group">
-              <label for="contaData">Data de Vencimento</label>
-              <input type="date" id="contaData" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Adicionar</button>
-          </form>
-          <div class="list-container">
-            <h3>Contas Registradas</h3>
             <ul id="contaLista"></ul>
           </div>
         </section>
 
-      {%  elif aba=="gerenciamento" %}
-        <section id="Gerenciamento" class="tab-content active">
-          <h2>Contas e Obrigações</h2>
-          <form id="contaForm" action="{{ url_for("gerenciamento.return_empresa") }}" method="post">
-            <div class="form-group">
-              <label for="contaDesc">Empresa</label>
-              <input name="codigo" type="text" id="contaDesc" placeholder="Código da empresa..." required>
-            </div>
-            <div class="form-group">
-              <label for="contaData">Data</label>
-              <input name="data" type="date" id="contaData" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Buscar</button>
-          </form>
-          <div class="list-container">
-            <h3>Contas Registradas {{ empresas }}</h3>
-            <ul id="contaLista"></ul>
+      {% elif aba=="gerenciamento" %}
+        <section id="gerenciamento" class="tab-content active">
+          <div class="page-header">
+            <h1>Gerenciamento Avançado</h1>
+            <p>Ferramentas avançadas de controle e análise</p>
           </div>
-        </section>
+          
+          <div class="content-card">
+            <form id="contaForm" action="{{ url_for('gerenciamento.return_empresa') }}" method="post" class="form-grid">
+              <div class="form-group">
+                <label for="contaDesc">Código da Empresa</label>
+                <input name="codigo" type="text" id="contaDesc" placeholder="Código da empresa..." required>
+              </div>
+              <div class="form-group">
+                <label for="contaData">Data de Consulta</label>
+                <input name="data" type="date" id="contaData" required>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-search"></i> Buscar Dados
+                </button>
+              </div>
+            </form>
+          </div>
+          
+          <div class="content-card">
+            <div class="card-header">
+              <h3>Contas Registradas - {{ nome_empresa if nome_empresa else 'Selecione uma empresa' }}</h3>
+            </div>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Código</th>
+                    <th>Descrição</th>
+                    <th>Valor Total</th>
+                    <th>Valor Fechado</th>
+                    <th>Contabilizado</th>
+                  </tr>
+                </thead>
+                <tbody id="contaLista">
+                  {% for conta in contas %}
+                  <tr>
+                    <td><strong>{{ conta.codigo }}</strong></td>
+                    <td>
+                      {{ conta.descricao }}
+                      <button type="button" class="btn-descricao-toggle" onclick="toggledesc('{{ conta.codigo }}')">
+                        <i class="fas fa-chevron-down"></i> Descrição
+                      </button>
+                    </td>
+                    <td>R$ {{ "%.2f"|format(conta.valor_total or 0.0) }}</td>
+                    <td>R$ {{ "%.2f"|format(conta.valor_fechado or 0.0) }}</td>
+                    <td>
+                      <input type="checkbox" disabled {% if conta.contabilizado %}checked{% endif %}>
+                    </td>
+                  </tr>
+                  <tr id="{{ conta.codigo }}" class="hidden">
+                    <td colspan="5">
+                      <textarea class="descricao-textarea" rows="3" placeholder="Digite a descrição detalhada da conta...">{{ conta.descricao_detalhada or '' }}</textarea>
+                    </td>
+                  </tr>
+                  {% else %}
+                    <tr>
+                      <td colspan="5" style="text-align: center; color: #888;">Nenhuma conta registrada</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
         
       {% elif aba=="relatorios" %}
         <section id="relatorios" class="tab-content active">
-          <h2>Relatórios</h2>
-          <div class="report-container">
-            <h3>Resumo Financeiro</h3>
-            <canvas id="financialChart"></canvas>
+          <div class="page-header">
+            <h1>Relatórios</h1>
+            <p>Análises e relatórios detalhados</p>
+          </div>
+          
+          <div class="content-card">
+            <div class="card-header">
+              <h3>Resumo Financeiro</h3>
+              <div class="card-actions">
+                <select class="filter-select">
+                  <option>Último mês</option>
+                  <option>Últimos 3 meses</option>
+                  <option>Último ano</option>
+                </select>
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas id="financialChart"></canvas>
+            </div>
           </div>
         </section>
       {% endif %}
     </main>
   </div>
 
+  <script src="static/script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
