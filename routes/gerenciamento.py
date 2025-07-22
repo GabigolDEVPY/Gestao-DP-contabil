@@ -10,14 +10,16 @@ def return_page():
                 "descricao": "Conta de Luz",
                 "valor_total": 150.75,
                 "valor_fechado": 140.50,
-                "descricao_detalhada": "afasdfsdafjsadfsadfsdfasdfsdf"
+                "descricao_detalhada": "afasdfsdafjsadfsadfsdfasdfsdf",
+                "contabilizado": True
         },
         {
                 "codigo": "002",
                 "descricao": "Conta de Água",
                 "valor_total": 80.20,
                 "valor_fechado": 80.20,
-                "descricao_detalhada": "fadsfasdfasdfsdafsdfsdfsdfsadf"
+                "descricao_detalhada": "fadsfasdfasdfsdafsdfsdfsdfsadf",
+                "contabilizado": True
         }
         ]
         return render_template("index.html", aba="gerenciamento", contas=contas)

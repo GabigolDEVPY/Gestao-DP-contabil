@@ -239,7 +239,8 @@
           
           <div class="content-card">
             <div class="card-header">
-              <h3>Contas Registradas - {{ nome_empresa if nome_empresa else 'Selecione uma empresa' }}</h3>
+              <h3>Empresa {{ empresa }}</h3>
+              <h3>Contas Referente a data - {{ data }}</h3>
             </div>
             <div class="table-container">
               <table class="data-table">
@@ -250,10 +251,11 @@
                     <th>Valor Total</th>
                     <th>Valor Fechado</th>
                     <th>Contabilizado</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody id="contaLista">
-                  {% for conta in contas %}
+                {% for conta in contas %}
                   <tr>
                     <td><strong>{{ conta.codigo }}</strong></td>
                     <td>
@@ -262,11 +264,22 @@
                         <i class="fas fa-chevron-down"></i> Descrição
                       </button>
                     </td>
-                    <td>R$ {{ "%.2f"|format(conta.valor_total or 0.0) }}</td>
-                    <td>R$ {{ "%.2f"|format(conta.valor_fechado or 0.0) }}</td>
                     <td>
-                      <input type="checkbox" disabled {% if conta.contabilizado %}checked{% endif %}>
+                      <input type="number" step="0.01" value="{{ '%.2f'|format(conta.valor_total or 0.0) }}" name="valor_total">
                     </td>
+                    <td>
+                      <input type="number" step="0.01" value="{{ '%.2f'|format(conta.valor_fechado or 0.0) }}" name="valor_fechado">
+                    </td>
+                    <td>
+                      <select name="status">
+                        <option value="Pendente" {% if conta.contabilizado == 'Pendente' %}selected{% endif %}>Pendente</option>
+                        <option value="Feito" {% if conta.contabilizado == 'Feito' %}selected{% endif %}>Feito</option>
+                        <option value="Fazendo" {% if conta.contabilizado == 'Fazendo' %}selected{% endif %}>Fazendo</option>
+                      </select>
+                    </td>
+                    <td class="salvar-container">
+                      <button type="button" class="btn-salvar">Salvar</button>
+                    </td>>
                   </tr>
                   <tr id="{{ conta.codigo }}" class="hidden">
                     <td colspan="5">

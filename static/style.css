@@ -223,8 +223,9 @@ a {
 
 .card-header {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 20px;
   padding-bottom: 16px;
   border-bottom: 1px solid var(--border-color);
@@ -617,3 +618,37 @@ a {
 .hidden {
   display: none;
 }
+
+  .salvar-container {
+    text-align: right;
+  }
+
+.btn-salvar {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+  input[type="number"],
+  select,
+  .descricao-textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+  }
+
+  input[type="number"]:focus,
+  select:focus,
+  .descricao-textarea:focus {
+    border-color: #007bff;
+    outline: none;
+  }
