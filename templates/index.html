@@ -60,7 +60,7 @@
           <div class="dashboard-grid">
             <div class="card">
               <h3>Total de Empresas</h3>
-              <p id="totalEmpresas">{{ empresa.total }}</p>
+              <p id="totalEmpresas">{{ valor.total }}</p>
             </div>
             <div class="card">
               <h3>Total de Contas</h3>
@@ -124,7 +124,7 @@
       {%  elif aba=="gerenciamento" %}
         <section id="Gerenciamento" class="tab-content active">
           <h2>Contas e Obrigações</h2>
-          <form id="contaForm">
+          <form id="contaForm" action="{{ url_for("gerenciamento.return_empresa") }}" method="post">
             <div class="form-group">
               <label for="contaDesc">Empresa</label>
               <input name="codigo" type="text" id="contaDesc" placeholder="Código da empresa..." required>
@@ -134,9 +134,9 @@
               <input name="data" type="date" id="contaData" required>
             </div>
             <button type="submit" class="btn btn-primary">Buscar</button>
-          <!-- </form> -->
+          </form>
           <div class="list-container">
-            <h3>Contas Registradas</h3>
+            <h3>Contas Registradas {{ empresas }}</h3>
             <ul id="contaLista"></ul>
           </div>
         </section>
