@@ -11,7 +11,8 @@ def return_page():
                 "valor_total": 150.75,
                 "valor_fechado": 140.50,
                 "descricao_detalhada": "afasdfsdafjsadfsadfsdfasdfsdf",
-                "contabilizado": True
+                "contabilizado": "Pendente",
+                "diferenca": "19099"
         },
         {
                 "codigo": "002",
@@ -19,7 +20,8 @@ def return_page():
                 "valor_total": 80.20,
                 "valor_fechado": 80.20,
                 "descricao_detalhada": "fadsfasdfasdfsdafsdfsdfsdfsadf",
-                "contabilizado": True
+                "contabilizado": "Feito",
+                "diferenca": "19099"
         }
         ]
         return render_template("index.html", aba="gerenciamento", contas=contas)
