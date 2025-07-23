@@ -31,3 +31,8 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log("Status da conta " + contaId + " carregado."); // só pra mostrar que pegou
   });
 });
+
+  function toggleForm(id) {
+    const formDiv = document.getElementById('form-filial-' + id);
+    formDiv.style.display = formDiv.style.display === 'none' ? 'block' : 'none';
+  }

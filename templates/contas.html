@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Contas{% endblock %}
+{% block content %}
+<section id="contas">
+  <div class="page-header"><h1>Contas</h1></div>
+  <div class="content-card">
+    <form id="contaForm">
+      <input type="text" id="contaDesc" placeholder="Descrição" required>
+      <input type="number" id="contaValor" placeholder="Valor" required>
+      <input type="date" id="contaData" required>
+      <button type="submit" class="btn btn-primary">Adicionar Conta</button>
+    </form>
+  </div>
+  <div class="content-card">
+    <h3>Contas Registradas</h3>
+    <ul id="contaLista"></ul>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Gerenciamento{% endblock %}
+{% block content %}
+<section id="gerenciamento">
+  <div class="page-header"><h1>Gerenciamento Avançado</h1></div>
+  <form action="{{ url_for('gerenciamento.return_empresa') }}" method="post">
+    <input name="codigo" type="text" placeholder="Código da Empresa" required>
+    <select name="mes" required>
+      <option value="01">Janeiro</option>
+      <option value="02">Fevereiro</option>
+    </select>
+    <select name="ano" required>
+      <option value="2024">2024</option>
+      <option value="2025">2025</option>
+    </select>
+    <button type="submit">Buscar</button>
+  </form>
+</section>
+{% endblock %}

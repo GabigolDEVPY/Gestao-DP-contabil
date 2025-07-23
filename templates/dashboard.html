@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<section id="dashboard" class="tab-content active">
+  <div class="page-header">
+    <h1>Dashboard</h1>
+    <p>Visão geral do sistema de gerenciamento</p>
+  </div>
+
+  <div class="dashboard-grid">
+    <div class="metric-card">
+      <div class="metric-icon empresas"><i class="fas fa-building"></i></div>
+      <div class="metric-content">
+        <h3>Total de Empresas</h3>
+        <p>{{ valor.total if valor else '0' }}</p>
+      </div>
+    </div>
+    <!-- Outras métricas -->
+  </div>
+</section>
+{% endblock %}

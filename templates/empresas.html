@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Empresas{% endblock %}
+{% block content %}
+<section id="empresas" class="tab-content active">
+  <div class="page-header">
+    <h1>Cadastro de Empresas</h1>
+  </div>
+
+  <div class="content-card">
+    <form id="empresaForm" class="form-grid">
+      <input type="text" id="empresaId" placeholder="ID" required>
+      <input type="text" id="empresaNome" placeholder="Nome da Empresa" required>
+      <input type="text" id="empresaCnpj" placeholder="CNPJ">
+      <button type="submit" class="btn btn-primary">Cadastrar</button>
+    </form>
+  </div>
+
+  <div class="content-card">
+    <h3>Empresas Cadastradas</h3>
+    <ul>
+      {% for empresa in empresas %}
+        <li>
+          <strong>{{ empresa.nome }}</strong> - ID: {{ empresa.id }}
+          <button type="button" onclick="toggleForm({{ empresa.id }})">+ Filial</button>
+          <div id="form-filial-{{ empresa.id }}" style="display:none;">
+            <form action="/cadastrar-filial" method="POST">
+              <input type="text" name="empresa_id" value="{{ empresa.id }}" readonly>
+              <input type="text" name="nome_filial" placeholder="Nome Filial" required>
+              <input type="text" name="cnpj_filial" placeholder="CNPJ" required>
+              <button type="submit">Cadastrar Filial</button>
+            </form>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endblock %}

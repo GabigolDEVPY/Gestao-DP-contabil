@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Gerenciamento DP & Contabilidade{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <h2><i class="fas fa-briefcase"></i> DP & Contabilidade</h2>
+      </div>
+      <ul class="nav-menu">
+        <a href="{{ url_for('dashboard.return_dashboard') }}">
+          <li class="nav-item"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
+        </a>
+        <a href="{{ url_for('gerenciamento.return_page')}}">
+          <li class="nav-item"><i class="fas fa-cogs"></i> Gerenciamento</li>
+        </a>
+        <a href="{{ url_for('empresas.return_page')}}">
+          <li class="nav-item"><i class="fas fa-building"></i> Empresas</li>
+        </a>
+        <a href="{{ url_for('contas.return_page')}}">
+          <li class="nav-item"><i class="fas fa-money-bill"></i> Contas</li>
+        </a>
+        <a href="{{ url_for('relatorios.return_page')}}">
+          <li class="nav-item"><i class="fas fa-chart-bar"></i> Relatórios</li>
+        </a>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <div class="search-container">
+          <input type="text" placeholder="Pesquisar empresas ou contas...">
+        </div>
+        <div class="user-profile">
+          <span>Usuário Admin</span>
+          <div class="avatar"><i class="fas fa-user-circle"></i></div>
+        </div>
+      </header>
+
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>
