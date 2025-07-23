@@ -171,9 +171,20 @@
             <div class="card-header">
               <h3>Empresas Cadastradas</h3>
             </div>
-            <ul id="empresaLista"></ul>
+            <ul id="empresaLista">
+              {% for empresa in empresas %}
+                <li class="empresa-item">
+                  <div class="empresa-header">
+                    <strong class="empresa-nome">{{ empresa.nome }}</strong>
+                    <span class="empresa-codigo">Código: {{ empresa.id }}</span>
+                  </div>
+                  <div class="empresa-details">
+                    <span class="empresa-cnpj"><strong>CNPJ:</strong> {{ empresa.cnpj }}</span>
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
           </div>
-        </section>
 
       {% elif aba=="contas" %}  
         <section id="contas" class="tab-content active">
