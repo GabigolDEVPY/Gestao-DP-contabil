@@ -1,19 +1,111 @@
 {% extends "base.html" %}
 {% block title %}Gerenciamento{% endblock %}
 {% block content %}
-<section id="gerenciamento">
-  <div class="page-header"><h1>Gerenciamento Avançado</h1></div>
-  <form action="{{ url_for('gerenciamento.return_empresa') }}" method="post">
-    <input name="codigo" type="text" placeholder="Código da Empresa" required>
-    <select name="mes" required>
-      <option value="01">Janeiro</option>
-      <option value="02">Fevereiro</option>
-    </select>
-    <select name="ano" required>
-      <option value="2024">2024</option>
-      <option value="2025">2025</option>
-    </select>
-    <button type="submit">Buscar</button>
-  </form>
-</section>
+  <section id="gerenciamento" class="tab-content active">
+    <div class="page-header">
+      <h1>Gerenciamento Avançado</h1>
+      <p>Ferramentas avançadas de controle e análise</p>
+    </div>
+    
+    <div class="content-card">
+      <form id="contaForm" action="{{ url_for('gerenciamento.return_empresa') }}" method="post" class="form-grid">
+        <div class="form-group">
+          <label for="contaDesc">Código da Empresa</label>
+          <input name="codigo" type="text" id="contaDesc" placeholder="Código da empresa..." required>
+        </div>
+        <div class="form-group">
+          <label for="mes">Mês</label>
+          <select name="mes" id="mes" required>
+            <option value="">Selecione o mês</option>
+            <option value="01">Janeiro</option>
+            <option value="02">Fevereiro</option>
+            <option value="03">Março</option>
+            <option value="04">Abril</option>
+            <option value="05">Maio</option>
+            <option value="06">Junho</option>
+            <option value="07">Julho</option>
+            <option value="08">Agosto</option>
+            <option value="09">Setembro</option>
+            <option value="10">Outubro</option>
+            <option value="11">Novembro</option>
+            <option value="12">Dezembro</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="ano">Ano</label>
+          <select name="ano" id="ano" required>
+            <option value="">Selecione o ano</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-search"></i> Buscar Dados
+          </button>
+        </div>
+      </form>
+    </div>
+    
+    <div class="content-card">
+      <div class="card-header">
+        <h3>Empresa {{ empresa }}</h3>
+        <h3>Contas Referente a data - {{ data }}</h3>
+      </div>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Descrição</th>
+              <th>Valor Total</th>
+              <th>Valor Fechado</th>
+              <th>Diferença</th>
+              <th>Contabilizado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="contaLista">
+          {% for conta in contas %}
+            <tr>
+              <td><strong>{{ conta.codigo }}</strong></td>
+              <td>
+                {{ conta.descricao }}
+                <button type="button" class="btn-descricao-toggle" onclick="toggledesc('{{ conta.codigo }}')">
+                  <i class="fas fa-chevron-down"></i> Descrição
+                </button>
+              </td>
+              <td>
+                <input type="number" step="0.01" value="{{ '%.2f'|format(conta.valor_total or 0.0) }}" name="valor_total">
+              </td>
+              <td>
+                <input type="number" step="0.01" value="{{ '%.2f'|format(conta.valor_fechado or 0.0) }}" name="valor_fechado">
+              </td>
+              <td>
+                <label style="color: red;">{{ conta.diferenca }}</label>
+              </td>
+              <td>
+                <select name="status" id="status_{{ conta.descricao }}" data-conta="{{ conta.codigo }}" class="statusSelect" onchange="mudarCor(this)">
+                  <option value="Pendente" {% if conta.contabilizado == 'Pendente' %}selected{% endif %}>Pendente</option>
+                  <option value="Feito" {% if conta.contabilizado == 'Feito' %}selected{% endif %}>Feito</option>
+                  <option value="Fazendo" {% if conta.contabilizado == 'Fazendo' %}selected{% endif %}>Fazendo</option>
+                </select>
+              </td>
+              <td class="salvar-container">
+                <button type="button" class="btn-salvar">Salvar</button>
+              </td>>
+            </tr>
+            <tr id="{{ conta.codigo }}" class="hidden">
+              <td colspan="5">
+                <textarea class="descricao-textarea" rows="3" placeholder="Digite a descrição detalhada da conta...">{{ conta.descricao_detalhada or '' }}</textarea>
+              </td>
+            </tr>
+            {% else %}
+              <tr>
+                <td colspan="5" style="text-align: center; color: #888;">Nenhuma conta registrada</td>
+              </tr>
+          {% endfor %}
+          </tbody>
 {% endblock %}

@@ -5,6 +5,7 @@ from routes.dashboard import dashboard_bp
 from routes.gerenciamento import gerenciamento_bp
 from routes.empresas import empresas_bp
 from routes.contas import contas_bp
+from routes.relatorios import relatorios_bp
 
 def create_app():
     app = Flask(__name__)
@@ -12,13 +13,14 @@ def create_app():
     app.register_blueprint(gerenciamento_bp)
     app.register_blueprint(empresas_bp)
     app.register_blueprint(contas_bp)
+    app.register_blueprint(relatorios_bp)
     return app
 
 app = create_app()
 
 @app.route("/", methods=["GET"])
 def return_home():
-    return render_template("index.html", aba="dashboard")
+    return render_template("base.html", aba="dashboard")
 
 if __name__ == "__main__":
-    app.run(debug=True, host="localhost", port=5500)
+    app.run(debug=True, host="0.0.0.0", port=5500)

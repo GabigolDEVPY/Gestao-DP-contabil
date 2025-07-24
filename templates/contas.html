@@ -1,19 +1,39 @@
 {% extends "base.html" %}
 {% block title %}Contas{% endblock %}
 {% block content %}
-<section id="contas">
-  <div class="page-header"><h1>Contas</h1></div>
-  <div class="content-card">
-    <form id="contaForm">
-      <input type="text" id="contaDesc" placeholder="Descrição" required>
-      <input type="number" id="contaValor" placeholder="Valor" required>
-      <input type="date" id="contaData" required>
-      <button type="submit" class="btn btn-primary">Adicionar Conta</button>
-    </form>
-  </div>
-  <div class="content-card">
-    <h3>Contas Registradas</h3>
-    <ul id="contaLista"></ul>
-  </div>
-</section>
+  <section id="contas" class="tab-content active">
+    <div class="page-header">
+      <h1>Contas e Obrigações</h1>
+      <p>Controle todas as contas e obrigações fiscais</p>
+    </div>
+    
+    <div class="content-card">
+      <form id="contaForm" class="form-grid">
+        <div class="form-group">
+          <label for="contaDesc">Descrição</label>
+          <input type="text" id="contaDesc" placeholder="Ex: Salário, INSS, FGTS" required>
+        </div>
+        <div class="form-group">
+          <label for="contaValor">Valor (R$)</label>
+          <input type="number" id="contaValor" step="0.01" min="0" placeholder="0,00" required>
+        </div>
+        <div class="form-group">
+          <label for="contaData">Data de Vencimento</label>
+          <input type="date" id="contaData" required>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Adicionar Conta
+          </button>
+        </div>
+      </form>
+    </div>
+    
+    <div class="content-card">
+      <div class="card-header">
+        <h3>Contas Registradas</h3>
+      </div>
+      <ul id="contaLista"></ul>
+    </div>
+  </section>
 {% endblock %}

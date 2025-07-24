@@ -1,21 +1,72 @@
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock %}
 {% block content %}
-<section id="dashboard" class="tab-content active">
-  <div class="page-header">
-    <h1>Dashboard</h1>
-    <p>Visão geral do sistema de gerenciamento</p>
-  </div>
-
-  <div class="dashboard-grid">
-    <div class="metric-card">
-      <div class="metric-icon empresas"><i class="fas fa-building"></i></div>
-      <div class="metric-content">
-        <h3>Total de Empresas</h3>
-        <p>{{ valor.total if valor else '0' }}</p>
+  <section id="dashboard" class="tab-content active">
+    <div class="page-header">
+      <h1>Dashboard</h1>
+      <p>Visão geral do sistema de gerenciamento</p>
+    </div>
+    
+    <div class="dashboard-grid">
+      <div class="metric-card">
+        <div class="metric-icon empresas">
+          <i class="fas fa-building"></i>
+        </div>
+        <div class="metric-content">
+          <h3>Total de Empresas</h3>
+          <p class="metric-value" id="totalEmpresas">{{ valor.total if valor else '0' }}</p>
+          <span class="metric-change positive">+12% este mês</span>
+        </div>
+      </div>
+      
+      <div class="metric-card">
+        <div class="metric-icon contas">
+          <i class="fas fa-file-invoice"></i>
+        </div>
+        <div class="metric-content">
+          <h3>Total de Contas</h3>
+          <p class="metric-value" id="totalContas">0</p>
+          <span class="metric-change positive">+8% este mês</span>
+        </div>
+      </div>
+      
+      <div class="metric-card">
+        <div class="metric-icon valor">
+          <i class="fas fa-dollar-sign"></i>
+        </div>
+        <div class="metric-content">
+          <h3>Valor Total</h3>
+          <p class="metric-value" id="valorTotal">R$ 0,00</p>
+          <span class="metric-change negative">-3% este mês</span>
+        </div>
       </div>
     </div>
-    <!-- Outras métricas -->
-  </div>
-</section>
+
+    <div class="recent-activity">
+      <div class="activity-header">
+        <h3>Atividades Recentes</h3>
+        <button class="btn-outline">Ver todas</button>
+      </div>
+      <div class="activity-list">
+        <div class="activity-item">
+          <div class="activity-icon">
+            <i class="fas fa-plus-circle"></i>
+          </div>
+          <div class="activity-content">
+            <p><strong>Nova empresa cadastrada:</strong> Tech Solutions Ltda</p>
+            <span class="activity-time">Há 2 horas</span>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon">
+            <i class="fas fa-edit"></i>
+          </div>
+          <div class="activity-content">
+            <p><strong>Conta atualizada:</strong> INSS - Empresa ABC</p>
+            <span class="activity-time">Há 4 horas</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 {% endblock %}
