@@ -4,6 +4,8 @@ contas_bp = Blueprint('contas', __name__)
 
 @contas_bp.route("/contas", methods=["GET"])
 def return_page():
-    print("deu certo")
-    valor= {"total": 18 }
-    return render_template("contas.html", valor=valor, aba="contas")
+    contas_data = [
+        {"descricao": "INSS", "valor": 500.00, "data_vencimento": "2025-07-25"},
+        {"descricao": "FGTS", "valor": 300.00, "data_vencimento": "2025-07-30"},
+    ]
+    return render_template("contas.html", aba="contas", contas=contas_data)

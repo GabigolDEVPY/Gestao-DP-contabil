@@ -34,44 +34,104 @@
         <h3>Empresas Cadastradas</h3>
       </div>
       <ul id="empresaLista">
-        {% for empresa in empresas %}
-          <li class="empresa-item">
-            <div class="empresa-header">
-              <strong class="empresa-nome">{{ empresa.nome }}</strong>
-              <span class="empresa-codigo"><strong>ID:</strong> {{ empresa.id }}</span>
-            </div>
-            <div class="empresa-details">
-              <span class="empresa-cnpj"><strong>CNPJ:</strong> {{ empresa.cnpj }}</span>
-            </div>
+      {% for empresa in empresas %}
+        <li class="empresa-item">
+          <div class="empresa-header">
+            <strong class="empresa-nome">{{ empresa.nome }}</strong>
+            <span class="empresa-codigo"><strong>ID:</strong> {{ empresa.id }}</span>
+          </div>
+          <div class="empresa-details">
+            <span class="empresa-cnpj"><strong>CNPJ:</strong> {{ empresa.cnpj }}</span>
+          </div>
 
-            <button type="button" class="btn btn-outline btn-descricao-toggle" onclick="toggleForm({{ empresa.id }})">
-              + Filial
+          <!-- Contas Pendentes -->
+          <button type="button" class="btn btn-outline btn-descricao-toggle" onclick="toggleForm('contas-{{ empresa.id }}')">
+            Contas Pendentes ({{ empresa.contas_pendentes|length }})
+            <span id="toggle-icon-contas-{{ empresa.id }}">+</span>
+          </button>
+          <div id="contas-{{ empresa.id }}" class="form-filial hidden" style="margin-top: 12px;">
+            {% if empresa.contas_pendentes|length > 0 %}
+              <ul style="list-style:none; padding-left:0;">
+                {% for conta in empresa.contas_pendentes %}
+                  <li style="margin-bottom:8px;">
+                    <strong>{{ conta.descricao }}</strong> - <small>{{ conta.data }}</small>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <p>Nenhuma conta pendente.</p>
+            {% endif %}
+          </div>
+
+          <!-- Filiais -->
+          {% if empresa.filiais and empresa.filiais|length > 0 %}
+            <button type="button" class="btn btn-outline btn-descricao-toggle" onclick="toggleForm('filiais-{{ empresa.id }}')">
+              Filiais ({{ empresa.filiais|length }})
+              <span id="toggle-icon-filiais-{{ empresa.id }}">+</span>
             </button>
 
-            <div id="form-filial-{{ empresa.id }}" class="form-filial hidden" style="margin-top: 16px;">
-              <form action="/cadastrar-filial" method="POST" class="form-grid">
-                <div class="form-group">
-                  <label for="empresa_id_{{ empresa.id }}">ID da Empresa:</label>
-                  <input type="text" id="empresa_id_{{ empresa.id }}" name="empresa_id" value="{{ empresa.id }}" readonly>
-                </div>
+            <div id="filiais-{{ empresa.id }}" class="form-filial hidden" style="margin-top: 12px; padding-left: 20px;">
+              <ul style="list-style:none; padding-left:0;">
+                {% for filial in empresa.filiais %}
+                  <li class="empresa-item" style="background:#f9f9f9; margin-bottom:10px; padding:10px; border-radius:6px;">
+                    <div class="empresa-header">
+                      <strong class="empresa-nome">{{ filial.nome }}</strong>
+                      <span class="empresa-codigo"><strong>ID:</strong> {{ filial.id }}</span>
+                    </div>
+                    <div class="empresa-details">
+                      <span class="empresa-cnpj"><strong>CNPJ:</strong> {{ filial.cnpj }}</span>
+                    </div>
 
-                <div class="form-group">
-                  <label for="nome_filial_{{ empresa.id }}">Nome da Filial:</label>
-                  <input type="text" id="nome_filial_{{ empresa.id }}" name="nome_filial" required>
-                </div>
-
-                <div class="form-group">
-                  <label for="cnpj_filial_{{ empresa.id }}">CNPJ da Filial:</label>
-                  <input type="text" id="cnpj_filial_{{ empresa.id }}" name="cnpj_filial" required>
-                </div>
-
-                <div class="form-actions">
-                  <button type="submit" class="btn btn-primary btn-salvar">Cadastrar Filial</button>
-                </div>
-              </form>
+                    <!-- Contas da Filial -->
+                    <button type="button" class="btn btn-outline btn-descricao-toggle" onclick="toggleForm('contas-filial-{{ filial.id }}')">
+                      Contas Pendentes ({{ filial.contas_pendentes|length }})
+                      <span id="toggle-icon-contas-filial-{{ filial.id }}">+</span>
+                    </button>
+                    <div id="contas-filial-{{ filial.id }}" class="form-filial hidden" style="margin-top: 12px;">
+                      {% if filial.contas_pendentes|length > 0 %}
+                        <ul style="list-style:none; padding-left:0;">
+                          {% for conta in filial.contas_pendentes %}
+                            <li style="margin-bottom:8px;">
+                              <strong>{{ conta.descricao }}</strong> - <small>{{ conta.data }}</small>
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      {% else %}
+                        <p>Nenhuma conta pendente.</p>
+                      {% endif %}
+                    </div>
+                  </li>
+                {% endfor %}
+              </ul>
             </div>
-          </li>
-        {% endfor %}
+          {% endif %}
+
+          <!-- Formulário para cadastrar filial -->
+          <button type="button" class="btn btn-outline btn-descricao-toggle" onclick="toggleForm('form-filial-{{ empresa.id }}')">
+            + Cadastrar Filial
+          </button>
+
+          <div id="form-filial-{{ empresa.id }}" class="form-filial hidden" style="margin-top: 16px;">
+            <form action="/cadastrar-filial" method="POST" class="form-grid">
+              <div class="form-group">
+                <label for="empresa_id_{{ empresa.id }}">ID da Empresa:</label>
+                <input type="text" id="empresa_id_{{ empresa.id }}" name="empresa_id" value="{{ empresa.id }}" readonly>
+              </div>
+              <div class="form-group">
+                <label for="nome_filial_{{ empresa.id }}">Nome da Filial:</label>
+                <input type="text" id="nome_filial_{{ empresa.id }}" name="nome_filial" required>
+              </div>
+              <div class="form-group">
+                <label for="cnpj_filial_{{ empresa.id }}">CNPJ da Filial:</label>
+                <input type="text" id="cnpj_filial_{{ empresa.id }}" name="cnpj_filial" required>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary btn-salvar">Cadastrar Filial</button>
+              </div>
+            </form>
+          </div>
+        </li>
+      {% endfor %}
       </ul>
     </div>
   </section>

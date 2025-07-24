@@ -40,3 +40,17 @@ document.addEventListener('DOMContentLoaded', function () {
       formDiv.style.display = 'none';
     }
   }
+
+
+function toggleForm(id) {
+  const div = document.getElementById(id);
+  const icon = document.getElementById('toggle-icon-' + id);
+  if (div.style.display === 'block') {
+    div.style.display = 'none';
+    if (icon) icon.textContent = '+';
+  } else {
+    div.style.display = 'block';
+    if (icon) icon.textContent = '−';
+  }
+}
+
