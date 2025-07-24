@@ -34,5 +34,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function toggleForm(id) {
     const formDiv = document.getElementById('form-filial-' + id);
-    formDiv.style.display = formDiv.style.display === 'none' ? 'block' : 'none';
+    if (formDiv.style.display === 'none') {
+      formDiv.style.display = 'block';
+    } else {
+      formDiv.style.display = 'none';
+    }
   }
