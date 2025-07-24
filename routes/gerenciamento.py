@@ -24,11 +24,11 @@ def return_page():
                 "diferenca": "19099"
         }
         ]
-        return render_template("gerenciamento.html", contas=contas)
+        return render_template("gerenciamento.html", contas=contas, aba="gerenciamento")
 
 
 @gerenciamento_bp.route("/gerenciamento/empresa", methods=["POST"])
 def return_empresa():
     dados = request.form.to_dict()
-    return render_template("gerenciamento.html")
+    return render_template("gerenciamento.html", aba="gerenciamento")
 

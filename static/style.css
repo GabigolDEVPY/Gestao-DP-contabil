@@ -77,26 +77,32 @@ a {
 .nav-menu {
   flex: 1;
   padding: 20px 0;
-  list-style: none;
+  list-style: none; /* Remove as bolinhas */
+  margin: 0;
 }
 
 .nav-item {
   margin: 4px 16px;
-  padding: 12px 16px;
-  border-radius: var(--radius);
-  cursor: pointer;
+}
+
+.nav-item a {
   display: flex;
   align-items: center;
   gap: 12px;
-  transition: all 0.2s ease;
+  width: 100%;
+  padding: 12px 16px;
+  text-decoration: none;
+  color: inherit;
   font-weight: 500;
+  border-radius: var(--radius);
+  transition: all 0.2s ease;
 }
 
-.nav-item:hover {
+.nav-item a:hover {
   background: rgba(255, 255, 255, 0.1);
 }
 
-.nav-item.active {
+.nav-item.active a {
   background: var(--primary-color);
   box-shadow: var(--shadow-md);
 }

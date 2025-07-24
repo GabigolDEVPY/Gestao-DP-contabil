@@ -6,4 +6,4 @@ dashboard_bp = Blueprint('dashboard', __name__)
 def return_dashboard():
     print("deu certo")
     valor= {"total": 18 }
-    return render_template("dashboard.html", valor=valor)
+    return render_template("dashboard.html", valor=valor, aba="dashboard")
