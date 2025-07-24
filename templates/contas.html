@@ -10,16 +10,12 @@
     <div class="content-card">
       <form id="contaForm" class="form-grid">
         <div class="form-group">
+          <label for="contaCodigo">Código da Conta</label>
+          <input type="text" id="contaCodigo" placeholder="Ex: C001" required>
+        </div>
+        <div class="form-group">
           <label for="contaDesc">Descrição</label>
           <input type="text" id="contaDesc" placeholder="Ex: Salário, INSS, FGTS" required>
-        </div>
-        <div class="form-group">
-          <label for="contaValor">Valor (R$)</label>
-          <input type="number" id="contaValor" step="0.01" min="0" placeholder="0,00" required>
-        </div>
-        <div class="form-group">
-          <label for="contaData">Data de Vencimento</label>
-          <input type="date" id="contaData" required>
         </div>
         <div class="form-actions">
           <button type="submit" class="btn btn-primary">
