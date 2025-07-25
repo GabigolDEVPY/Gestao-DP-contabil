@@ -20,7 +20,7 @@ app = create_app()
 
 @app.route("/", methods=["GET"])
 def return_home():
-    return render_template("base.html", aba="dashboard")
+    return render_template("dashboard.html", aba="dashboard", pendentes="12")
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5600)
+    app.run(debug=True, host="0.0.0.0", port=5500)

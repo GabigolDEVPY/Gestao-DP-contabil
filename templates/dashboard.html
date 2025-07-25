@@ -4,64 +4,219 @@
 <section id="dashboard" class="tab-content active">
   <div class="page-header">
     <h1>Dashboard</h1>
-    <p>Visão geral do sistema</p>
+    <p>Visão geral do sistema financeiro</p>
+    <div class="dashboard-stats">
+      <span class="dashboard-date">
+        <i class="fas fa-calendar-alt"></i>
+        Última atualização: <strong id="current-date"></strong>
+      </span>
+    </div>
   </div>
 
   <div class="dashboard-grid">
     <!-- Empresas -->
-    <div class="metric-card">
+    <div class="metric-card" data-metric="empresas">
       <div class="metric-icon empresas">
         <i class="fas fa-building"></i>
       </div>
       <div class="metric-content">
         <h3>Total de Empresas</h3>
-        <p class="metric-value">{{ total_empresas }}</p>
+        <p class="metric-value">{{ total_empresas or 0 }}</p>
+        <div class="metric-change positive">
+          <i class="fas fa-arrow-up"></i>
+          <span>+12% este mês</span>
+        </div>
+        <div class="metric-footer">
+          <small>Incluindo filiais</small>
+        </div>
       </div>
     </div>
 
     <!-- Contas -->
-    <div class="metric-card">
+    <div class="metric-card" data-metric="contas">
       <div class="metric-icon contas">
-        <i class="fas fa-file-invoice"></i>
+        <i class="fas fa-file-invoice-dollar"></i>
       </div>
       <div class="metric-content">
         <h3>Total de Contas</h3>
-        <p class="metric-value">{{ total_contas }}</p>
+        <p class="metric-value">{{ total_contas or 0 }}</p>
+        <div class="metric-change positive">
+          <i class="fas fa-arrow-up"></i>
+          <span>+8% esta semana</span>
+        </div>
+        <div class="metric-footer">
+          <small>Valor: R$ {{ valor_total_contas or '0,00' }}</small>
+        </div>
       </div>
     </div>
 
     <!-- Pendentes -->
-    <div class="metric-card">
-      <div class="metric-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+    <div class="metric-card" data-metric="pendentes">
+      <div class="metric-icon pendentes">
         <i class="fas fa-clock"></i>
       </div>
       <div class="metric-content">
         <h3>Contas Pendentes</h3>
-        <p class="metric-value">{{ pendentes }}</p>
+        <p class="metric-value">{{ pendentes or 0 }}</p>
+        <div class="metric-change warning">
+          <i class="fas fa-exclamation-triangle"></i>
+          <span>Requer atenção</span>
+        </div>
+        <div class="metric-footer">
+          <small>Valor: R$ {{ valor_pendentes or '0,00' }}</small>
+        </div>
       </div>
     </div>
 
     <!-- Fazendo -->
-    <div class="metric-card">
-      <div class="metric-icon" style="background: linear-gradient(135deg, #fb923c, #ea580c);">
-        <i class="fas fa-spinner"></i>
+    <div class="metric-card" data-metric="fazendo">
+      <div class="metric-icon fazendo">
+        <i class="fas fa-tasks"></i>
       </div>
       <div class="metric-content">
-        <h3>Contas Fazendo</h3>
-        <p class="metric-value">{{ fazendo }}</p>
+        <h3>Contas em Andamento</h3>
+        <p class="metric-value">{{ fazendo or 0 }}</p>
+        <div class="metric-change neutral">
+          <i class="fas fa-sync-alt fa-spin"></i>
+          <span>Em processamento</span>
+        </div>
+        <div class="metric-footer">
+          <small>Valor: R$ {{ valor_fazendo or '0,00' }}</small>
+        </div>
       </div>
     </div>
 
     <!-- Concluídas -->
-    <div class="metric-card">
-      <div class="metric-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+    <div class="metric-card" data-metric="concluidas">
+      <div class="metric-icon concluidas">
         <i class="fas fa-check-circle"></i>
       </div>
       <div class="metric-content">
         <h3>Contas Concluídas</h3>
-        <p class="metric-value">{{ concluidas }}</p>
+        <p class="metric-value">{{ concluidas or 0 }}</p>
+        <div class="metric-change positive">
+          <i class="fas fa-check"></i>
+          <span>{{ percentual_concluidas or 0 }}% do total</span>
+        </div>
+        <div class="metric-footer">
+          <small>Valor: R$ {{ valor_concluidas or '0,00' }}</small>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- Atividade Recente -->
+  <div class="content-card recent-activity">
+    <div class="activity-header">
+      <h3>
+        <i class="fas fa-history"></i>
+        Atividade Recente
+      </h3>
+      <a href="#" class="btn btn-outline">Ver todas</a>
+    </div>
+    
+    <div class="activity-list">
+      {% if atividades_recentes %}
+        {% for atividade in atividades_recentes %}
+        <div class="activity-item">
+          <div class="activity-icon">
+            <i class="fas {{ atividade.icone or 'fa-bell' }}"></i>
+          </div>
+          <div class="activity-content">
+            <p>{{ atividade.descricao }}</p>
+            <span class="activity-time">{{ atividade.tempo or 'Há poucos minutos' }}</span>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="activity-item">
+          <div class="activity-icon">
+            <i class="fas fa-plus"></i>
+          </div>
+          <div class="activity-content">
+            <p>Nova empresa "Exemplo Ltda" foi cadastrada</p>
+            <span class="activity-time">Há 15 minutos</span>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon">
+            <i class="fas fa-check"></i>
+          </div>
+          <div class="activity-content">
+            <p>Conta "Pagamento Fornecedor" foi concluída</p>
+            <span class="activity-time">Há 1 hora</span>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon">
+            <i class="fas fa-edit"></i>
+          </div>
+          <div class="activity-content">
+            <p>Filial "São Paulo Centro" foi atualizada</p>
+            <span class="activity-time">Há 2 horas</span>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
 </section>
+
+<script>
+// Atualizar data atual
+document.getElementById('current-date').textContent = new Date().toLocaleDateString('pt-BR', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit'
+});
+
+// Animação de contadores
+function animateCounters() {
+  const counters = document.querySelectorAll('.metric-value');
+  
+  counters.forEach(counter => {
+    const target = parseInt(counter.textContent.replace(/[^\d]/g, ''));
+    const increment = target / 50;
+    let current = 0;
+    
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        counter.textContent = counter.textContent.includes('R$') 
+          ? `R$ ${target.toLocaleString('pt-BR')}` 
+          : target.toLocaleString('pt-BR');
+        clearInterval(timer);
+      } else {
+        counter.textContent = counter.textContent.includes('R$') 
+          ? `R$ ${Math.floor(current).toLocaleString('pt-BR')}` 
+          : Math.floor(current).toLocaleString('pt-BR');
+      }
+    }, 20);
+  });
+}
+
+// Funções dos botões
+function exportarDados() {
+  alert('Função de exportar dados será implementada');
+}
+
+function atualizarDashboard() {
+  location.reload();
+}
+
+// Inicializar animações quando a página carregar
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(animateCounters, 500);
+});
+
+// Adicionar interatividade aos cards
+document.querySelectorAll('.metric-card').forEach(card => {
+  card.addEventListener('click', function() {
+    const metric = this.dataset.metric;
+    // Aqui você pode adicionar navegação ou ações específicas
+    console.log(`Clicou no card: ${metric}`);
+  });
+});
+</script>
 {% endblock %}
