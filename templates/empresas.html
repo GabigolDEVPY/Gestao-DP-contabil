@@ -45,9 +45,9 @@
           </div>
 
           <!-- Contas Pendentes -->
-          <button type="button" class="btn btn-outline btn-descricao-toggle" onclick="toggleForm('contas-{{ empresa.id }}')">
+          <button type="button" class="btn btn-outline btn-descricao-toggle" onclick="toggledesc('contas-{{ empresa.id }}')">
+            <i id="icon-contas-{{ empresa.id }}" class="fas fa-chevron-down"></i>
             Contas Pendentes ({{ empresa.contas_pendentes|length }})
-            <span id="toggle-icon-contas-{{ empresa.id }}">+</span>
           </button>
           <div id="contas-{{ empresa.id }}" class="form-filial hidden" style="margin-top: 12px;">
             {% if empresa.contas_pendentes|length > 0 %}
@@ -65,9 +65,9 @@
 
           <!-- Filiais -->
           {% if empresa.filiais and empresa.filiais|length > 0 %}
-            <button type="button" class="btn btn-outline btn-descricao-toggle" onclick="toggleForm('filiais-{{ empresa.id }}')">
+            <button type="button" class="btn btn-outline btn-descricao-toggle" onclick="toggledesc('filiais-{{ empresa.id }}')">
+              <i id="icon-filiais-{{ empresa.id }}" class="fas fa-chevron-down"></i>
               Filiais ({{ empresa.filiais|length }})
-              <span id="toggle-icon-filiais-{{ empresa.id }}">+</span>
             </button>
 
             <div id="filiais-{{ empresa.id }}" class="form-filial hidden" style="margin-top: 12px; padding-left: 20px;">
@@ -83,9 +83,9 @@
                     </div>
 
                     <!-- Contas da Filial -->
-                    <button type="button" class="btn btn-outline btn-descricao-toggle" onclick="toggleForm('contas-filial-{{ filial.id }}')">
+                    <button type="button" class="btn btn-outline btn-descricao-toggle" onclick="toggledesc('contas-filial-{{ filial.id }}')">
+                      <i id="icon-contas-filial-{{ filial.id }}" class="fas fa-chevron-down"></i>
                       Contas Pendentes ({{ filial.contas_pendentes|length }})
-                      <span id="toggle-icon-contas-filial-{{ filial.id }}">+</span>
                     </button>
                     <div id="contas-filial-{{ filial.id }}" class="form-filial hidden" style="margin-top: 12px;">
                       {% if filial.contas_pendentes|length > 0 %}
@@ -107,7 +107,8 @@
           {% endif %}
 
           <!-- Formulário para cadastrar filial -->
-          <button type="button" class="btn btn-outline btn-descricao-toggle" onclick="toggleForm('form-filial-{{ empresa.id }}')">
+          <button type="button" class="btn btn-outline btn-descricao-toggle" onclick="toggledesc('form-filial-{{ empresa.id }}')">
+            <i id="icon-form-filial-{{ empresa.id }}" class="fas fa-chevron-down"></i>
             + Cadastrar Filial
           </button>
 

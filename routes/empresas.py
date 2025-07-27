@@ -17,7 +17,8 @@ def return_page():
                         {
                         "id": 11,
                         "nome": "Filial 1",
-                        "cnpj": "00.000.000/0002-00"
+                        "cnpj": "00.000.000/0002-00",
+                        "contas_pendentes": [{"descricao": "Conta de Luz", "data": "2025-07-20"},{"descricao": "Conta de Água", "data": "2025-07-22"}]   
                         },
                         {
                         "id": 12,
