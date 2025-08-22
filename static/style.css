@@ -1104,7 +1104,93 @@ li[style*="background:#f9f9f9"] {
   transform: scale(1.2);
 }
 
-/* Garantir que hidden funcione corretamente */
 .hidden {
   display: none !important;
+}
+
+/* Estilização adicional para os botões de toggle */
+.btn-descricao-toggle {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  padding: 2px 5px;
+  margin-left: 10px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.btn-descricao-toggle:hover {
+  background-color: #f8f9fa;
+}
+
+.descricao-textarea {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+
+/* Regras para garantir que elementos hidden fiquem ocultos */
+.hidden {
+  display: none !important;
+}
+
+.form-filial.hidden {
+  display: none !important;
+}
+
+/* Estilização adicional para os botões de toggle */
+.btn-descricao-toggle {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  padding: 2px 5px;
+  margin-left: 10px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.btn-descricao-toggle:hover {
+  background-color: var(--primary-color);
+}
+
+.descricao-textarea {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+/* Estilização para os botões de toggle das empresas */
+.btn.btn-outline.btn-descricao-toggle {
+  background: var(--primary-color);
+  border: 1px solid #dee2e6;
+  color: #495057;
+  padding: 8px 12px;
+  margin: 8px 0 4px 0;
+  border-radius: 4px;
+  font-size: 14px;
+  width: auto;
+  display: inline-block;
+}
+
+.btn.btn-outline.btn-descricao-toggle:hover {
+  background-color: var(--primary-color);
+  border-color: #adb5bd;
+}
+
+/* Container dos formulários de filiais */
+.form-filial {
+  background: var(--primary-color);
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 15px;
+  margin: 10px 0;
 }

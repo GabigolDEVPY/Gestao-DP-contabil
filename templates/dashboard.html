@@ -32,24 +32,6 @@
       </div>
     </div>
 
-    <!-- Contas -->
-    <div class="metric-card" data-metric="contas">
-      <div class="metric-icon contas">
-        <i class="fas fa-file-invoice-dollar"></i>
-      </div>
-      <div class="metric-content">
-        <h3>Total de Contas</h3>
-        <p class="metric-value">{{ total_contas or 0 }}</p>
-        <div class="metric-change positive">
-          <i class="fas fa-arrow-up"></i>
-          <span>+8% esta semana</span>
-        </div>
-        <div class="metric-footer">
-          <small>Valor: R$ {{ valor_total_contas or '0,00' }}</small>
-        </div>
-      </div>
-    </div>
-
     <!-- Pendentes -->
     <div class="metric-card" data-metric="pendentes">
       <div class="metric-icon pendentes">
@@ -102,61 +84,6 @@
           <small>Valor: R$ {{ valor_concluidas or '0,00' }}</small>
         </div>
       </div>
-    </div>
-  </div>
-
-  <!-- Atividade Recente -->
-  <div class="content-card recent-activity">
-    <div class="activity-header">
-      <h3>
-        <i class="fas fa-history"></i>
-        Atividade Recente
-      </h3>
-      <a href="#" class="btn btn-outline">Ver todas</a>
-    </div>
-    
-    <div class="activity-list">
-      {% if atividades_recentes %}
-        {% for atividade in atividades_recentes %}
-        <div class="activity-item">
-          <div class="activity-icon">
-            <i class="fas {{ atividade.icone or 'fa-bell' }}"></i>
-          </div>
-          <div class="activity-content">
-            <p>{{ atividade.descricao }}</p>
-            <span class="activity-time">{{ atividade.tempo or 'Há poucos minutos' }}</span>
-          </div>
-        </div>
-        {% endfor %}
-      {% else %}
-        <div class="activity-item">
-          <div class="activity-icon">
-            <i class="fas fa-plus"></i>
-          </div>
-          <div class="activity-content">
-            <p>Nova empresa "Exemplo Ltda" foi cadastrada</p>
-            <span class="activity-time">Há 15 minutos</span>
-          </div>
-        </div>
-        <div class="activity-item">
-          <div class="activity-icon">
-            <i class="fas fa-check"></i>
-          </div>
-          <div class="activity-content">
-            <p>Conta "Pagamento Fornecedor" foi concluída</p>
-            <span class="activity-time">Há 1 hora</span>
-          </div>
-        </div>
-        <div class="activity-item">
-          <div class="activity-icon">
-            <i class="fas fa-edit"></i>
-          </div>
-          <div class="activity-content">
-            <p>Filial "São Paulo Centro" foi atualizada</p>
-            <span class="activity-time">Há 2 horas</span>
-          </div>
-        </div>
-      {% endif %}
     </div>
   </div>
 </section>

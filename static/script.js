@@ -5,19 +5,29 @@ function openTab(_, id) {
 
 function toggledesc(codigo) {
   const row = document.getElementById(codigo);
-  if (row.style.display === 'none' || row.style.display === '') {
+  const button = document.querySelector(`button[onclick="toggledesc('${codigo}')"]`);
+  const icon = button.querySelector('i');
+  
+  // Remove ou adiciona a classe hidden em vez de usar style.display
+  if (row.classList.contains('hidden')) {
+    row.classList.remove('hidden');
     row.style.display = 'table-row';
+    icon.className = 'fas fa-chevron-up';
+    button.innerHTML = '<i class="fas fa-chevron-up"></i> Ocultar';
   } else {
+    row.classList.add('hidden');
     row.style.display = 'none';
+    icon.className = 'fas fa-chevron-down';
+    button.innerHTML = '<i class="fas fa-chevron-down"></i> Detalhes';
   }
 }
 
 function mudarCor(select) {
   const valor = select.value;
   select.style.backgroundColor = {
-    'Pendente': 'yellow',
-    'Feito': '#28a745',
-    'Fazendo': 'orange'
+    'Pendente': '#a74128ff',
+    'Feito': '#28a78cff',
+    'Fazendo': '#ffa620ff'
   }[valor] || 'white';
 }
 
@@ -30,27 +40,48 @@ document.addEventListener('DOMContentLoaded', function () {
     const contaId = select.getAttribute('data-conta');
     console.log("Status da conta " + contaId + " carregado."); // só pra mostrar que pegou
   });
-});
-
-  function toggleForm(id) {
-    const formDiv = document.getElementById('form-filial-' + id);
-    if (formDiv.style.display === 'none') {
-      formDiv.style.display = 'block';
-    } else {
-      formDiv.style.display = 'none';
+  
+  // Garantir que todas as linhas de detalhes comecem ocultas
+  document.querySelectorAll('tr.hidden').forEach(row => {
+    row.style.display = 'none';
+  });
+  
+  // Garantir que todos os elementos com classe hidden comecem ocultos
+  document.querySelectorAll('.form-filial.hidden').forEach(element => {
+    element.style.display = 'none';
+  });
+  
+  // Inicializar todos os ícones de toggle como '+'
+  document.querySelectorAll('[id^="toggle-icon-"]').forEach(icon => {
+    if (icon.textContent.trim() === '') {
+      icon.textContent = '+';
     }
-  }
-
+  });
+});
 
 function toggleForm(id) {
   const div = document.getElementById(id);
   const icon = document.getElementById('toggle-icon-' + id);
-  if (div.style.display === 'block') {
-    div.style.display = 'none';
-    if (icon) icon.textContent = '+';
-  } else {
+  
+  if (!div) {
+    console.error('Elemento não encontrado:', id);
+    return;
+  }
+  
+  // Verifica se está oculto pela classe hidden ou pelo style.display
+  const isHidden = div.classList.contains('hidden') || 
+                   div.style.display === 'none' || 
+                   div.style.display === '';
+  
+  if (isHidden) {
+    // Mostrar elemento
+    div.classList.remove('hidden');
     div.style.display = 'block';
     if (icon) icon.textContent = '−';
+  } else {
+    // Ocultar elemento
+    div.classList.add('hidden');
+    div.style.display = 'none';
+    if (icon) icon.textContent = '+';
   }
 }
-
