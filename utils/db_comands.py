@@ -18,7 +18,6 @@ def execute_command(command, value=None):
     
     if command.strip().upper().startswith("SELECT"):
         rows = cursor.fetchall()
-        return rows
         return [dict(row) for row in rows]  # retorna lista de dicionários
     else:
-        return cursor.lastrowid  # retorna o id gerado ou 0 se não tiver
+        return cursor.lastrowid  # retorna o id gerado ou 0 se não tiverdx
