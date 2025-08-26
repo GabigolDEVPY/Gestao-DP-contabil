@@ -1,4 +1,7 @@
+import sys
+sys.dont_write_bytecode = True
 import sqlite3
+
 from pathlib import Path
 
 CAMINHO_DB = Path(__file__).parent.parent / "data_base.db"
