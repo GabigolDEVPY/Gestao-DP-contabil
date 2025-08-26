@@ -1,6 +1,7 @@
 import sys 
 sys.dont_write_bytecode = True
-from db_comands import execute_command
+from utils.db_comands import execute_command
+# from db_comands import execute_command
 
 class Empresa:
     @staticmethod
@@ -10,8 +11,11 @@ class Empresa:
         for empresa in dados_empresas:
             # {'id': 1, 'empresa_id': 433, 'empresa_nome': 'A melhor', 'empresa_cnpj': '1231233773323'}
             empresa = empresa
-            contas_pendentes = execute_command("SELECT * FROM contas WHERE id = ?", (empresa["id"],))
-            print(contas_pendentes)
+            empresa["contas_pendentes"] = execute_command('SELECT conta_nome, conta_data FROM contas WHERE empresa_id = ? AND conta_status = "Pendente" ', (empresa["empresa_id"],))
+            empresas.append(empresa)
+            print(empresa)
+        print(empresas)    
+        return empresas    
 
             
         

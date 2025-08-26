@@ -54,7 +54,7 @@
               <ul style="list-style:none; padding-left:0;">
                 {% for conta in empresa.contas_pendentes %}
                   <li style="margin-bottom:8px;">
-                    <strong>{{ conta.descricao }}</strong> - <small>{{ conta.data }}</small>
+                    <strong>{{ conta.conta_nome }}</strong> - <small>{{ conta.conta_data }}</small>
                   </li>
                 {% endfor %}
               </ul>
