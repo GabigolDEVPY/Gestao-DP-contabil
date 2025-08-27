@@ -9,11 +9,11 @@ class Empresa:
         dados_empresas = execute_command("SELECT * FROM empresas")
         empresas = []
         for empresa in dados_empresas:
-            # {'id': 1, 'empresa_id': 433, 'empresa_nome': 'A melhor', 'empresa_cnpj': '1231233773323'}
             empresa = empresa
             empresa["contas_pendentes"] = execute_command('SELECT conta_nome, conta_data FROM contas WHERE empresa_id = ? AND conta_status = "Pendente" ', (empresa["empresa_id"],))
+            empresa["periodos"] = execute_command("SELECT empresa_id, mes, ano, status FROM periodos WHERE empresa_id = ?", (empresa["empresa_id"],))
+            empresa["filiais"] = execute_command("SELECT * FROM empresas_filiais WHERE empresa_id = ?", (empresa["empresa_id"],))
             empresas.append(empresa)
-            print(empresa)
         print(empresas)    
         return empresas    
 
