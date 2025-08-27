@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template
+from utils.func_contas import Contas
 
 contas_bp = Blueprint('contas', __name__)
 
@@ -8,4 +9,6 @@ def return_page():
         {"descricao": "INSS", "valor": 500.00, "data_vencimento": "2025-07-25"},
         {"descricao": "FGTS", "valor": 300.00, "data_vencimento": "2025-07-30"},
     ]
-    return render_template("contas.html", aba="contas", contas=contas_data)
+    contas = Contas.retornar_contas()
+    print(contas)
+    return render_template("contas.html", aba="contas", contas=contas)

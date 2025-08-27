@@ -1,4 +1,4 @@
--- Active: 1756167730368@@127.0.0.1@3306
+-- Active: 1756330376516@@127.0.0.1@3306
 
 CREATE TABLE IF NOT EXISTS empresas (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -34,7 +34,10 @@ CREATE TABLE IF NOT EXISTS contas_modelos (
     conta_nome VARCHAR(100) DEFAULT "RANDOM",
     conta_codigo VARCHAR(100) NOT NULL,
     tipo VARCHAR(20) DEFAULT "MATRIZ"
-    )
+    );
+
+ALTER Table contas_modelos 
+RENAME COLUMN tipo TO conta_tipo;
 
 CREATE TABLE periodos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -80,3 +83,7 @@ VALUES (
     "2025",
     "Pendente"
 )
+
+INSERT INTO contas_modelos (conta_codigo, conta_nome, conta_tipo)
+VALUES
+(21402, 'INSS a Recolher', 'Matriz' );

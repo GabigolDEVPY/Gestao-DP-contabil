@@ -84,10 +84,13 @@
         {% for conta in contas %}
           <li class="empresa-item">
             <div class="empresa-header">
-              <strong class="empresa-nome">{{ conta.descricao }}</strong>
+              <strong class="empresa-nome"><strong>Nome</strong>: {{ conta.conta_nome }}</strong>
             </div>
             <div class="empresa-details">
-              <span class="empresa-cnpj"><strong>Código</strong> {{ conta.data_vencimento }}</span>
+              <span class="empresa-cnpj"><strong>Código</strong>: {{ conta.conta_codigo }}</span>
+            </div>
+            <div class="empresa-details">
+              <span class="empresa-cnpj"><strong>Tipo</strong>: {{ conta.conta_tipo}}</span>
             </div>
           </li>
         {% endfor %}
