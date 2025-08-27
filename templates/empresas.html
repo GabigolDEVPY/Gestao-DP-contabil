@@ -129,11 +129,11 @@
                 {% for filial in empresa.filiais %}
                   <li class="empresa-item" style="background:#f9f9f9; margin-bottom:10px; padding:10px; border-radius:6px;">
                     <div class="empresa-header">
-                      <strong class="empresa-nome">{{ filial.nome }}</strong>
-                      <span class="empresa-codigo"><strong>ID:</strong> {{ filial.id }}</span>
+                      <strong class="empresa-nome">{{ filial.empresa_nome }}</strong>
+                      <span class="empresa-codigo"><strong>ID:</strong> {{ filial.id_filial }}</span>
                     </div>
                     <div class="empresa-details">
-                      <span class="empresa-cnpj"><strong>CNPJ:</strong> {{ filial.cnpj }}</span>
+                      <span class="empresa-cnpj"><strong>CNPJ:</strong> {{ filial.empresa_cnpj }}</span>
                     </div>
 
                     <!-- Contas da Filial -->
@@ -146,7 +146,7 @@
                         <ul style="list-style:none; padding-left:0;">
                           {% for conta in filial.contas_pendentes %}
                             <li style="margin-bottom:8px;">
-                              <strong>{{ conta.descricao }}</strong> - <small>{{ conta.data }}</small>
+                              <strong>{{ conta.conta_nome }}</strong> - <small>{{ conta.conta_data }}</small>
                             </li>
                           {% endfor %}
                         </ul>

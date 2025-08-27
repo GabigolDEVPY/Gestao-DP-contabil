@@ -8,10 +8,11 @@ CREATE TABLE IF NOT EXISTS empresas (
 ) ;
 CREATE TABLE IF NOT EXISTS empresas_filiais (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    empresa_id INT NOT NULL,
+    empresa_id INTEGER NOT NULL,
+    id_filial INT NOT NULL,
     empresa_nome VARCHAR(100) NOT NULL,
     empresa_cnpj VARCHAR(100) NOT NULL,
-    FOREIGN KEY (empresa_id) REFERENCES empresas(empresa_id)
+    FOREIGN KEY (empresa_id) REFERENCES empresa(empresa_id)
 ) ;
 
 
@@ -28,10 +29,18 @@ CREATE TABLE IF NOT EXISTS contas (
     conta_codigo VARCHAR(100) NOT NULL
     )
 
+CREATE TABLE IF NOT EXISTS contas_modelos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT ,
+    conta_nome VARCHAR(100) DEFAULT "RANDOM",
+    conta_codigo VARCHAR(100) NOT NULL,
+    tipo VARCHAR(20) DEFAULT "MATRIZ"
+    )
+
 CREATE TABLE periodos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     empresa_id INTEGER,
-    data VARCHAR(15),
+    mes VARCHAR(15),
+    ano VARCHAR(15),
     status VARCHAR(20) DEFAULT "Pendente"
 )
 
@@ -43,15 +52,31 @@ INSERT INTO empresas (empresa_id, empresa_nome, empresa_cnpj) VALUES (
     '1231233773323'
 )
 
+INSERT INTO empresas_filiais (empresa_id, id_filial, empresa_nome, empresa_cnpj) VALUES (
+    433,
+    34,
+    'Mahair',
+    '433243654354'
+)
+
 INSERT INTO contas (empresa_id, conta_nome, conta_status, conta_valor_total, conta_descricao, conta_valor_fechado, conta_data, conta_codigo)
 VALUES 
 (
-    "433",
-    "Salarios a pagar",
+    "34",
+    "Talvez uma conta",
     "Pendente",
     "0",
     "Nada",
     "0",
     "01/2025",
     "21410"
+)
+
+INSERT INTO periodos 
+(empresa_id, mes, ano, status) 
+VALUES (
+    433,
+    "1",
+    "2025",
+    "Pendente"
 )

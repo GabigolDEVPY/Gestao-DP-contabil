@@ -1,7 +1,6 @@
 import sys
 sys.dont_write_bytecode = True
 from flask import Blueprint, render_template, request, redirect, url_for
-from routes.db_empresas import empresas
 from utils.func_empresas import Empresa
 
 empresas_bp = Blueprint('empresas', __name__)
