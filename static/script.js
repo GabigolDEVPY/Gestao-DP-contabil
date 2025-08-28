@@ -4,20 +4,21 @@ function openTab(_, id) {
 }
 
 function toggledesc(codigo) {
-  const row = document.getElementById(codigo);
-  const button = document.querySelector(`button[onclick="toggledesc('${codigo}')"]`);
-  const icon = button.querySelector('i');
-  
-  // Remove ou adiciona a classe hidden em vez de usar style.display
-  if (row.classList.contains('hidden')) {
-    row.classList.remove('hidden');
-    row.style.display = 'table-row';
-    icon.className = 'fas fa-chevron-up';
+  const row = document.getElementById("detalhe-" + codigo);
+  const button = document.querySelector(`.btn-descricao-toggle[data-codigo="${codigo}"]`);
+  if (!row || !button) return;
+
+  const icon = button.querySelector("i");
+
+  if (row.classList.contains("hidden")) {
+    row.classList.remove("hidden");
+    row.style.display = "table-row";
+    icon.className = "fas fa-chevron-up";
     button.innerHTML = '<i class="fas fa-chevron-up"></i> Ocultar';
   } else {
-    row.classList.add('hidden');
-    row.style.display = 'none';
-    icon.className = 'fas fa-chevron-down';
+    row.classList.add("hidden");
+    row.style.display = "none";
+    icon.className = "fas fa-chevron-down";
     button.innerHTML = '<i class="fas fa-chevron-down"></i> Detalhes';
   }
 }
@@ -32,54 +33,45 @@ function mudarCor(select) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  const selects = document.querySelectorAll('.statusSelect');
-  selects.forEach(select => {
-    mudarCor(select); // Aplica cor inicial
-
-    // Pegando o código da conta que está no atributo data-conta
+  // Inicializa cores
+  document.querySelectorAll('.statusSelect').forEach(select => {
+    mudarCor(select);
     const contaId = select.getAttribute('data-conta');
-    console.log("Status da conta " + contaId + " carregado."); // só pra mostrar que pegou
+    console.log("Status da conta " + contaId + " carregado.");
   });
-  
-  // Garantir que todas as linhas de detalhes comecem ocultas
+
+  // Garante que linhas ocultas fiquem escondidas
   document.querySelectorAll('tr.hidden').forEach(row => {
     row.style.display = 'none';
   });
-  
-  // Garantir que todos os elementos com classe hidden comecem ocultos
-  document.querySelectorAll('.form-filial.hidden').forEach(element => {
-    element.style.display = 'none';
-  });
-  
-  // Inicializar todos os ícones de toggle como '+'
-  document.querySelectorAll('[id^="toggle-icon-"]').forEach(icon => {
-    if (icon.textContent.trim() === '') {
-      icon.textContent = '+';
-    }
+
+  // Liga botões de detalhes
+  document.querySelectorAll('.btn-descricao-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const codigo = btn.getAttribute("data-codigo");
+      toggledesc(codigo);
+    });
   });
 });
 
 function toggleForm(id) {
   const div = document.getElementById(id);
   const icon = document.getElementById('toggle-icon-' + id);
-  
+
   if (!div) {
     console.error('Elemento não encontrado:', id);
     return;
   }
-  
-  // Verifica se está oculto pela classe hidden ou pelo style.display
-  const isHidden = div.classList.contains('hidden') || 
-                   div.style.display === 'none' || 
+
+  const isHidden = div.classList.contains('hidden') ||
+                   div.style.display === 'none' ||
                    div.style.display === '';
-  
+
   if (isHidden) {
-    // Mostrar elemento
     div.classList.remove('hidden');
     div.style.display = 'block';
     if (icon) icon.textContent = '−';
   } else {
-    // Ocultar elemento
     div.classList.add('hidden');
     div.style.display = 'none';
     if (icon) icon.textContent = '+';

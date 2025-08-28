@@ -12,7 +12,8 @@ def return_page():
 @gerenciamento_bp.route("/gerenciamento/empresa", methods=["POST"])
 def return_empresa():
         dados = request.form.to_dict()
-        contas = Gerenciamento.retornar_periodo()
-        return render_template("gerenciamento.html",)
+        print(dados)
+        contas = Gerenciamento.retornar_periodo(dados)
+        return render_template("gerenciamento.html", contas=contas)
 
 
