@@ -73,10 +73,10 @@
         <tbody id="contaLista">
           {% for conta in contas %}
           <tr>
-            <td><strong>{{ conta.codigo }}</strong></td>
+            <td><strong>{{ conta.conta_codigo }}</strong></td>
             <td>
-              {{ conta.descricao }}
-              <button type="button" class="btn-descricao-toggle" onclick="toggledesc('{{ conta.codigo }}')">
+              {{ conta.conta_nome}}
+              <button type="button" class="btn-descricao-toggle" data-codigo="{{ conta.codigo }}">
                 <i class="fas fa-chevron-down"></i> Detalhes
               </button>
             </td>
@@ -90,7 +90,7 @@
               <span style="color: red;">{{ conta.diferenca }}</span>
             </td>
             <td>
-              <select name="status" id="status_{{ conta.descricao }}" data-conta="{{ conta.codigo }}" class="statusSelect" onchange="mudarCor(this)">
+              <select name="status" id="status_{{ conta.descricao }}" data-conta="{{ conta.codigo }}" class="statusSelect">
                 <option value="Pendente" {% if conta.contabilizado == 'Pendente' %}selected{% endif %}>Pendente</option>
                 <option value="Feito" {% if conta.contabilizado == 'Feito' %}selected{% endif %}>Feito</option>
                 <option value="Fazendo" {% if conta.contabilizado == 'Fazendo' %}selected{% endif %}>Fazendo</option>
@@ -100,9 +100,9 @@
               <button type="button" class="btn-salvar">Salvar</button>
             </td>
           </tr>
-          <tr id="{{ conta.codigo }}" class="hidden">
+          <tr id="detalhe-{{ conta.codigo }}" class="hidden">
             <td colspan="7">
-              <textarea class="descricao-textarea" rows="3" placeholder="Digite a descrição detalhada da conta...">{{ conta.descricao_detalhada or '' }}</textarea>
+              <textarea class="descricao-textarea" rows="3" placeholder="Digite a descrição detalhada da conta...">{{ conta.conta_descricao or '' }}</textarea>
             </td>
           </tr>
           {% else %}
