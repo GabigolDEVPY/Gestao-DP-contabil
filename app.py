@@ -9,6 +9,7 @@ from routes.relatorios import relatorios_bp
 
 def create_app():
     app = Flask(__name__)
+    app.secret_key = "fjasdjfksdf908432rnf4hn29f3"
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(gerenciamento_bp)
     app.register_blueprint(empresas_bp)

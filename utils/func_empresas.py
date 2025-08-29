@@ -15,5 +15,14 @@ class Empresa:
                 filial["contas_pendentes"] = execute_command('SELECT conta_nome, conta_data FROM contas WHERE empresa_id = ? AND conta_status = "Pendente" ', (filial["id_filial"],))
             empresa["filiais"] = filiais    
             empresas.append(empresa) 
-        return empresas    
+        return empresas 
+    
+    def cadastrar_empresa(dados):
+        dados = tuple(dados.values())
+        try:
+            result = execute_command("INSERT INTO empresas (empresa_id, empresa_nome, empresa_cnpj) VALUES (?, ?, ?)", dados)
+            return None
+        except Exception as e:
+            return ("Erro ao cadastrar empresa, o ID já está em uso!")
+
 

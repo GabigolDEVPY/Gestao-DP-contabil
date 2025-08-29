@@ -7,3 +7,4 @@ contas_bp = Blueprint('contas', __name__)
 def return_page():
     contas = Contas.retornar_contas()
     return render_template("contas.html", aba="contas", contas=contas)
+
