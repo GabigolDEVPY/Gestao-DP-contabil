@@ -84,7 +84,7 @@ VALUES (
 
 INSERT INTO contas_modelos (conta_codigo, conta_nome, conta_tipo)
 VALUES
-(21403, 'FGTS a Recolher', 'Matriz' ),
-(21431, 'Recisão', 'Matriz' ),
-(21401, 'Salarios a Pagar', 'Matriz' ),
-(12204, 'Adiantamento Salarial', 'Matriz' );
+(21403, 'FGTS a Recolher', 'Matriz'),
+(21431, 'Recisão', 'Matriz'),
+(21401, 'Salarios a Pagar', 'Matriz'),
+(12204, 'Adiantamento Salarial', 'Matriz');

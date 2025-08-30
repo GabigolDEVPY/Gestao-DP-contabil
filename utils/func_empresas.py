@@ -34,7 +34,10 @@ class Empresa:
         except Exception as e:
             return "Periodo já cadastrado!"
         contas = execute_command("SELECT conta_nome, conta_codigo FROM contas_modelos WHERE conta_tipo = 'Matriz'")
+        if contas is None:
+            return "Sem contas para criar período"
         for conta in contas:
+            print(conta)
             conta["empresa_id"] = dados["empresa_id"]
             conta["conta_data"] = f"{dados["mes"]}/{dados["ano"]}"
             conta = tuple(conta.values())
