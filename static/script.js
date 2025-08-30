@@ -33,11 +33,14 @@ function mudarCor(select) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  // Inicializa cores
+  // Inicializa cores e adiciona evento de mudança
   document.querySelectorAll('.statusSelect').forEach(select => {
-    mudarCor(select);
+    mudarCor(select); // pinta inicial
     const contaId = select.getAttribute('data-conta');
     console.log("Status da conta " + contaId + " carregado.");
+
+    // agora muda quando o usuário troca
+    select.addEventListener('change', () => mudarCor(select));
   });
 
   // Garante que linhas ocultas fiquem escondidas
