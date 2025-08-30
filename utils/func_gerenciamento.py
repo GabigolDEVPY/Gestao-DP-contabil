@@ -10,4 +10,3 @@ class Gerenciamento:
         contas = execute_command("SELECT * FROM contas WHERE empresa_id = ? AND conta_data = ?", (dados["codigo"], data))
         return contas
 
-        
