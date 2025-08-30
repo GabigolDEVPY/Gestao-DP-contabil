@@ -73,7 +73,7 @@
               <ul style="list-style:none; padding-left:0;">
                 {% for periodo in empresa.periodos %}
                   <li style="margin-bottom:8px;">
-                    <strong>{{ periodo.mes }}/{{ periodo.ano }}</strong> - <small>Status: {{ periodo.status }}</small>
+                    <strong>{{ periodo.empresa_data }}</strong> - <small>Status: {{ periodo.status }}</small>
                   </li>
                 {% endfor %}
               </ul>
@@ -87,11 +87,11 @@
             + Criar Período
           </button>
           <div id="periodo-{{ empresa.id }}" class="form-filial hidden" style="margin-top: 16px;">
-            <form action="/criar-periodo" method="POST" class="form-grid">
-              <input type="hidden" name="empresa_id" value="{{ empresa.id }}">
+            <form action="{{ url_for('empresas.criar_periodo') }}" method="post" class="form-grid">
+              <input type="hidden" name="empresa_id" value="{{ empresa.empresa_id }}">
               <div class="form-group">
-                <label for="mes_{{ empresa.id }}">Mês:</label>
-                <select id="mes_{{ empresa.id }}" name="mes" required>
+                <label for="mes_{{ empresa.empresa_id }}">Mês:</label>
+                <select id="mes_{{ empresa.empresa_id }}" name="mes" required>
                   <option value="">Selecione o mês</option>
                   <option value="01">Janeiro</option>
                   <option value="02">Fevereiro</option>
@@ -108,8 +108,8 @@
                 </select>
               </div>
               <div class="form-group">
-                <label for="ano_{{ empresa.id }}">Ano:</label>
-                <input type="number" id="ano_{{ empresa.id }}" name="ano" min="2020" max="2030" placeholder="Ex: 2024" required>
+                <label for="ano_{{ empresa.empresa_id }}">Ano:</label>
+                <input type="number" id="ano_{{ empresa.empresa_id }}" name="ano" min="2020" max="2030" placeholder="Ex: 2024" required>
               </div>
               <div class="form-actions">
                 <button type="submit" class="btn btn-primary btn-salvar">Criar Período</button>
@@ -119,9 +119,9 @@
 
           <!-- Filiais -->
           {% if empresa.filiais and empresa.filiais|length > 0 %}
-            <button type="button" class="btn btn-outline btn-descricao-toggle" onclick="toggleForm('filiais-{{ empresa.id }}')">
+            <button type="button" class="btn btn-outline btn-descricao-toggle" onclick="toggleForm('filiais-{{ empresa.emprepsa_id }}')">
               Filiais ({{ empresa.filiais|length }})
-              <span id="toggle-icon-filiais-{{ empresa.id }}">+</span>
+              <span id="toggle-icon-filiais-{{ empresa.empresa_id }}">+</span>
             </button>
 
             <div id="filiais-{{ empresa.id }}" class="form-filial hidden" style="margin-top: 12px; padding-left: 20px;">

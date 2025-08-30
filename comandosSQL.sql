@@ -42,8 +42,7 @@ RENAME COLUMN tipo TO conta_tipo;
 CREATE TABLE periodos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     empresa_id INTEGER,
-    mes VARCHAR(15),
-    ano VARCHAR(15),
+    empresa_data VARCHAR(15) UNIQUE,
     status VARCHAR(20) DEFAULT "Pendente"
 )
 
@@ -76,14 +75,16 @@ VALUES
 )
 
 INSERT INTO periodos 
-(empresa_id, mes, ano, status) 
+(empresa_id, data, status) 
 VALUES (
     433,
-    "1",
-    "2025",
+    "01/2025",
     "Pendente"
 )
 
 INSERT INTO contas_modelos (conta_codigo, conta_nome, conta_tipo)
 VALUES
-(21402, 'INSS a Recolher', 'Matriz' );
+(21403, 'FGTS a Recolher', 'Matriz' ),
+(21431, 'Recisão', 'Matriz' ),
+(21401, 'Salarios a Pagar', 'Matriz' ),
+(12204, 'Adiantamento Salarial', 'Matriz' );

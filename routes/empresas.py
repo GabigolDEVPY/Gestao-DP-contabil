@@ -28,4 +28,9 @@ def cadastrar_empresa():
 @empresas_bp.route("/empresa/criarperiodo", methods=["POST"])
 def criar_periodo():
         dados = request.form.to_dict()
-        result = Empresa.criar_periodo()
+        print("Dados front", dados)
+        result = Empresa.criar_periodo(dados)
+        if result:
+                flash(result)
+                return redirect(url_for("empresas.return_page"))
+        return redirect(url_for("empresas.return_page"))
