@@ -19,7 +19,6 @@ def cadastrar_empresa():
         dados = request.form.to_dict()
         print(dados)
         result = Empresa.cadastrar_empresa(dados)
-        return redirect(url_for("empresas.return_page"))
         if result:
                 flash(result)
                 return redirect(url_for("empresas.return_page"))
