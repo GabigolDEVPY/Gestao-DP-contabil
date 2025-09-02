@@ -15,6 +15,7 @@ class Empresa:
             print(filiais)
             for filial in filiais:
                 filial["contas_pendentes"] = execute_command('SELECT conta_nome, conta_data FROM contas WHERE empresa_id = ? AND conta_status = "Pendente" ', (filial["id_filial"],)) 
+            print(empresa)
             empresas.append(empresa) 
         return empresas 
     

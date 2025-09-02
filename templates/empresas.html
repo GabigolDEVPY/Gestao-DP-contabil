@@ -124,9 +124,9 @@
 
           <!-- Filiais -->
           {% if empresa.filiais and empresa.filiais|length > 0 %}
-            <button type="button" class="btn btn-outline btn-descricao-toggle" onclick="toggleForm('filiais-{{ empresa.emprepsa_id }}')">
+            <button type="button" class="btn btn-outline btn-descricao-toggle" onclick="toggleForm('filiais-{{ empresa.id }}')">
               Filiais ({{ empresa.filiais|length }})
-              <span id="toggle-icon-filiais-{{ empresa.empresa_id }}">+</span>
+              <span id="toggle-icon-filiais-{{ empresa.id }}">+</span>
             </button>
 
             <div id="filiais-{{ empresa.id }}" class="form-filial hidden" style="margin-top: 12px; padding-left: 20px;">
