@@ -42,7 +42,7 @@ RENAME COLUMN tipo TO conta_tipo;
 CREATE TABLE periodos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     empresa_id INTEGER,
-    empresa_data VARCHAR(15) UNIQUE,
+    empresa_data VARCHAR(15),
     status VARCHAR(20) DEFAULT "Pendente"
 )
 
