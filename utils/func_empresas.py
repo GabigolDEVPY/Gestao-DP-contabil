@@ -11,12 +11,21 @@ class Empresa:
         for empresa in dados_empresas:
             empresa["contas_pendentes"] = execute_command('SELECT conta_nome, conta_data FROM contas WHERE empresa_id = ? AND conta_status = "Pendente" ', (empresa["empresa_id"],))
             empresa["periodos"] = execute_command("SELECT empresa_id, empresa_data, status FROM periodos WHERE empresa_id = ?", (empresa["empresa_id"],))
-            filiais = execute_command("SELECT * FROM empresas_filiais WHERE empresa_id = ?", (empresa["empresa_id"],))        
-            for periodos in empresa["periodos"]:
-                contas = execute_command("SELECT empresa_id, conta_status, conta_data FROM contas_modelos WHERE empresa_id", (empresa["empresa_id"],))
+            filiais = execute_command("SELECT * FROM empresas_filiais WHERE empresa_id = ?", (empresa["empresa_id"],))
+            def status_periodo(empresa_id=empresa['empresa_id']):        
+                for periodo in empresa["periodos"]:
+                    contas = execute_command("SELECT empresa_id, conta_status, conta_data FROM contas WHERE empresa_id = ?", (empresa_id,))
+                    for conta in contas:
+                        if conta["conta_status"] != "Feito":
+                            periodo["status"] = "Pendente"
+                            break
+                        periodo["status"] = "Concluido"  
+                    
             empresa["filiais"] = execute_command("SELECT * FROM empresas_filiais WHERE empresa_id = ?", (empresa["empresa_id"],))
-            for filial in filiais:
+            for filial in empresa["filiais"]:
+                status_periodo(empresa_id=filial["id_filial"])
                 filial["contas_pendentes"] = execute_command('SELECT conta_nome, conta_data FROM contas WHERE empresa_id = ? AND conta_status = "Pendente" ', (filial["id_filial"],)) 
+                print(filial["contas_pendentes"])
             empresas.append(empresa) 
         return empresas 
     

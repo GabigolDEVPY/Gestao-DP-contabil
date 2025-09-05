@@ -20,8 +20,8 @@ CREATE TABLE IF NOT EXISTS empresas_filiais (
 CREATE TABLE IF NOT EXISTS contas (
     id INTEGER PRIMARY KEY AUTOINCREMENT ,
     empresa_id INT NOT NULL,
-    conta_nome VARCHAR(100) DEFAULT "RANDOM",
-    conta_status VARCHAR(50) DEFAULT "PENDENTE",
+    conta_nome VARCHAR(100) DEFAULT "Random",
+    conta_status VARCHAR(50) DEFAULT "Pendente",
     conta_valor_total VARCHAR(100) DEFAULT 0,
     conta_descricao VARCHAR(500) ,
     conta_valor_fechado VARCHAR(100) DEFAULT 0,
