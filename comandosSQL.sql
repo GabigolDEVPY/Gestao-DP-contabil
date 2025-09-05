@@ -87,4 +87,5 @@ VALUES
 (21403, 'FGTS a Recolher', 'Matriz'),
 (21431, 'Recisão', 'Matriz'),
 (21401, 'Salarios a Pagar', 'Matriz'),
+(21416, 'Salarios a Pagar', 'Filial'),
 (12204, 'Adiantamento Salarial', 'Matriz');

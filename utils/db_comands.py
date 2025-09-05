@@ -17,10 +17,10 @@ def execute_command(command, value=None):
     else:
         cursor.execute(command, value)
     
-    conn.commit()  # garante que INSERT/UPDATE/DELETE sejam salvos
+    conn.commit() 
     
     if command.strip().upper().startswith("SELECT"):
         rows = cursor.fetchall()
-        return [dict(row) for row in rows]  # retorna lista de dicionários
+        return [dict(row) for row in rows]  
     else:
-        return cursor.lastrowid  # retorna o id gerado ou 0 se não tiverdx
+        return cursor.lastrowid  

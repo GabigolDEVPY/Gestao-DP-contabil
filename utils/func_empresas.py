@@ -1,6 +1,7 @@
 import sys 
 sys.dont_write_bytecode = True
 from utils.db_comands import execute_command
+import copy
 
 class Empresa:
     @staticmethod
@@ -10,12 +11,12 @@ class Empresa:
         for empresa in dados_empresas:
             empresa["contas_pendentes"] = execute_command('SELECT conta_nome, conta_data FROM contas WHERE empresa_id = ? AND conta_status = "Pendente" ', (empresa["empresa_id"],))
             empresa["periodos"] = execute_command("SELECT empresa_id, empresa_data, status FROM periodos WHERE empresa_id = ?", (empresa["empresa_id"],))
+            filiais = execute_command("SELECT * FROM empresas_filiais WHERE empresa_id = ?", (empresa["empresa_id"],))        
+            for periodos in empresa["periodos"]:
+                contas = execute_command("SELECT empresa_id, conta_status, conta_data FROM contas_modelos WHERE empresa_id", (empresa["empresa_id"],))
             empresa["filiais"] = execute_command("SELECT * FROM empresas_filiais WHERE empresa_id = ?", (empresa["empresa_id"],))
-            filiais = execute_command("SELECT * FROM empresas_filiais WHERE empresa_id = ?", (empresa["empresa_id"],))
-            print(filiais)
             for filial in filiais:
                 filial["contas_pendentes"] = execute_command('SELECT conta_nome, conta_data FROM contas WHERE empresa_id = ? AND conta_status = "Pendente" ', (filial["id_filial"],)) 
-            print(empresa)
             empresas.append(empresa) 
         return empresas 
     
@@ -33,17 +34,27 @@ class Empresa:
         
     @staticmethod
     def criar_periodo(dados):
+        filiais = execute_command("SELECT id_filial FROM empresas_filiais WHERE empresa_id = ?", (dados["empresa_id"],))
+        contas = execute_command("SELECT conta_nome, conta_codigo, conta_tipo FROM contas_modelos")
+        if contas is None:
+            return "Sem contas para criar período"
+        def criando_periodo(conta_id=dados["empresa_id"], tipo="Matriz"):
+            for conta_original in contas:
+                conta = copy.deepcopy(conta_original)
+                if conta["conta_tipo"] == tipo:
+                    conta["empresa_id"] = conta_id
+                    conta["conta_data"] = f"{dados['mes']}/{dados['ano']}"
+                    conta.pop("conta_tipo")
+                    conta = tuple(conta.values())
+                    execute_command("INSERT INTO contas (conta_nome, conta_codigo, empresa_id, conta_data) VALUES (?, ?, ?, ?)", conta)
+        criando_periodo()        
+        if filiais:
+            for filial in filiais:
+                criando_periodo(filial["id_filial"], tipo="Filial")
         try:
             execute_command("INSERT INTO periodos (empresa_id, empresa_data) VALUES (?, ?)", (dados['empresa_id'], f"{dados['mes']}/{dados['ano']}"))
         except Exception as e:
             return "Periodo já cadastrado!"
-        contas = execute_command("SELECT conta_nome, conta_codigo FROM contas_modelos WHERE conta_tipo = 'Matriz'")
-        if contas is None:
-            return "Sem contas para criar período"
-        for conta in contas:
-            conta["empresa_id"] = dados["empresa_id"]
-            conta["conta_data"] = f"{dados["mes"]}/{dados["ano"]}"
-            conta = tuple(conta.values())
-            execute_command("INSERT INTO contas (conta_nome, conta_codigo, empresa_id, conta_data) VALUES (?, ?, ?, ?)", conta)
+                
 
 

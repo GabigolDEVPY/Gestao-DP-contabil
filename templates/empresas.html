@@ -84,7 +84,8 @@
 
           <!-- Criar Período - Matriz -->
           <button type="button" class="btn btn-outline btn-descricao-toggle" onclick="toggleForm('periodo-{{ empresa.id }}')">
-            + Criar Período
+            Criar Período
+            <span id="toggle-icon-periodo-{{ empresa.id }}">+</span>
           </button>
           <div id="periodo-{{ empresa.id }}" class="form-filial hidden" style="margin-top: 16px;">
             <form action="{{ url_for('empresas.criar_periodo') }}" method="post" class="form-grid">
@@ -109,7 +110,7 @@
               </div>
               <div class="form-group">
                 <label for="ano_{{ empresa.empresa_id }}">Ano:</label>
-                <select id="mes_{{ empresa.empresa_id }}" name="ano" required>
+                <select id="ano_{{ empresa.empresa_id }}" name="ano" required>
                   <option value="">Selecione o ano</option>
                   <option value="2024">2024</option>
                   <option value="2025">2025</option>
@@ -160,7 +161,6 @@
                       {% endif %}
                     </div>
 
-
                   </li>
                 {% endfor %}
               </ul>
@@ -169,7 +169,8 @@
 
           <!-- Formulário para cadastrar filial -->
           <button type="button" class="btn btn-outline btn-descricao-toggle" onclick="toggleForm('form-filial-{{ empresa.id }}')">
-            + Cadastrar Filial
+            Cadastrar Filial
+            <span id="toggle-icon-form-filial-{{ empresa.id }}">+</span>
           </button>
 
           <div id="form-filial-{{ empresa.id }}" class="form-filial hidden" style="margin-top: 16px;">
@@ -197,5 +198,4 @@
       </ul>
     </div>
   </section>
-
 {% endblock %}
