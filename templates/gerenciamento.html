@@ -72,39 +72,43 @@
         </thead>
         <tbody id="contaLista">
           {% for conta in contas %}
-          <tr>
-            <td><strong>{{ conta.conta_codigo }}</strong></td>
-            <td>
-              {{ conta.conta_nome }}
-              <button type="button" class="btn-descricao-toggle" data-codigo="{{ conta.conta_codigo }}">
-                <i class="fas fa-chevron-down"></i> Detalhes
-              </button>
-            </td>
-            <td>
-              <input type="number" step="0.01" value="{{ '%.2f'|format(conta.valor_total or 0.0) }}" name="valor_total">
-            </td>
-            <td>
-              <input type="number" step="0.01" value="{{ '%.2f'|format(conta.valor_fechado or 0.0) }}" name="valor_fechado">
-            </td>
-            <td>
-              <span style="color: red;">{{ conta.diferenca }}</span>
-            </td>
-            <td>
-              <select name="status" id="status_{{ conta.conta_descricao }}" data-conta="{{ conta.codigo }}" class="statusSelect">
-                <option value="Pendente" {% if conta.contabilizado == 'Pendente' %}selected{% endif %}>Pendente</option>
-                <option value="Feito" {% if conta.contabilizado == 'Feito' %}selected{% endif %}>Feito</option>
-                <option value="Fazendo" {% if conta.contabilizado == 'Fazendo' %}selected{% endif %}>Fazendo</option>
-              </select>
-            </td>
-            <td class="salvar-container">
-              <button type="button" class="btn-salvar">Salvar</button>
-            </td>
-          </tr>
-          <tr id="detalhe-{{ conta.conta_codigo }}" class="hidden">
-            <td colspan="7">
-              <textarea class="descricao-textarea" rows="3" placeholder="Digite a descrição detalhada da conta...">{{ conta.conta_descricao or '' }}</textarea>
-            </td>
-          </tr>
+          <form action="{{url_for( 'gerenciamento.edit_contas')}}" method="post">
+            <tr>
+              <td><strong>{{ conta.conta_codigo }}</strong></td>
+              <td>
+                {{ conta.conta_nome }}
+                <button type="button" class="btn-descricao-toggle" data-codigo="{{ conta.conta_codigo }}">
+                  <i class="fas fa-chevron-down"></i> Detalhes
+                </button>
+              </td>
+              <td>
+                <input type="hidden" value='{{ periodo|tojson | default("{}") }}' name="periodo_conta">
+                <input type="hidden" value="{{ conta.id }}" name="id_conta">
+                <input type="number" step="0.01" value="{{ '%.2f'|format(conta.valor_total or 0.0) }}" name="valor_total">
+              </td>
+              <td>
+                <input type="number" step="0.01" value="{{ '%.2f'|format(conta.valor_fechado or 0.0) }}" name="valor_fechado">
+              </td>
+              <td>
+                <span style="color: red;">{{ conta.diferenca }}</span>
+              </td>
+              <td>
+                <select name="status" id="status_{{ conta.conta_descricao }}" data-conta="{{ conta.codigo }}" class="statusSelect">
+                  <option value="Pendente" {% if conta.contabilizado == 'Pendente' %}selected{% endif %}>Pendente</option>
+                  <option value="Feito" {% if conta.contabilizado == 'Feito' %}selected{% endif %}>Feito</option>
+                  <option value="Fazendo" {% if conta.contabilizado == 'Fazendo' %}selected{% endif %}>Fazendo</option>
+                </select>
+              </td>
+              <td class="salvar-container">
+                <button type="submit" class="btn-salvar">Salvar</button>
+              </td>
+            </tr>
+            <tr id="detalhe-{{ conta.conta_codigo }}" class="hidden">
+              <td colspan="7">
+                <textarea name="descricao" class="descricao-textarea" rows="3" placeholder="Digite a descrição detalhada da conta...">{{ conta.conta_descricao or '' }}</textarea>
+              </td>
+            </tr>
+          </form>
           {% else %}
           <tr>
             <td colspan="7" style="text-align: center; color: #888;">Nenhuma conta registrada</td>
