@@ -43,7 +43,7 @@ class Empresa:
                     dados_copia["ano"] = periodo["empresa_data"][-4:]
                     Empresa.criando_periodo(contas=contas, dados=dados_copia, conta_id=dados["empresa_id"], tipo="Filial")
             return
-        dados.pop["tipo"]
+        dados.pop("tipo")
         dados_empresa = tuple(dados.values())    
         result = execute_command("INSERT INTO empresas (empresa_id, empresa_nome, empresa_cnpj) VALUES (?, ?, ?)", dados_empresa)
         return None
