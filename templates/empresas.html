@@ -20,6 +20,7 @@
         <div class="form-group">
           <label for="empresaCnpj">CNPJ</label>
           <input style="height: 41px;" name="empresa_cnpj" type="number" id="empresaCnpj" placeholder="XX.XXX.XXX/XXXX-XX" maxlength="14" minlength="14">
+          <input type="hidden"  name="tipo" value="matriz">
         </div>
         <div class="form-actions">
           <button type="submit" class="btn btn-primary">
@@ -178,7 +179,7 @@
               <div class="form-group">
                 <label for="empresa_id_{{ empresa.id }}">ID da Empresa:</label>
                 <input type="hidden" name="matriz_id" value="{{ empresa.empresa_id }}">
-                <input type="text" id="empresa_id_{{ empresa.id }}" name="empresa_id" value="{{ empresa.id }}">
+                <input type="text" id="empresa_id_{{ empresa.id }}" name="empresa_id" required>
               </div>
               <div class="form-group">
                 <label for="nome_filial_{{ empresa.id }}">Nome da Filial:</label>
@@ -187,6 +188,7 @@
               <div class="form-group">
                 <label for="cnpj_filial_{{ empresa.id }}">CNPJ da Filial:</label>
                 <input type="text" id="cnpj_filial_{{ empresa.id }}" name="empresa_cnpj" required>
+                <input type="hidden"  name="tipo" value="filial">
               </div>
               <div class="form-actions">
                 <button type="submit" class="btn btn-primary btn-salvar">Cadastrar Filial</button>
