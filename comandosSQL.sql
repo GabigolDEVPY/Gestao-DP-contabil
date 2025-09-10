@@ -1,4 +1,4 @@
--- Active: 1756330376516@@127.0.0.1@3306
+-- Active: 1756167730368@@127.0.0.1@3306
 
 CREATE TABLE IF NOT EXISTS empresas (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -22,9 +22,9 @@ CREATE TABLE IF NOT EXISTS contas (
     empresa_id INT NOT NULL,
     conta_nome VARCHAR(100) DEFAULT "Random",
     conta_status VARCHAR(50) DEFAULT "Pendente",
-    conta_valor_total VARCHAR(100) DEFAULT 0,
+    conta_valor_total DECIMAL DEFAULT 0,
     conta_descricao VARCHAR(500) ,
-    conta_valor_fechado VARCHAR(100) DEFAULT 0,
+    conta_valor_fechado DECIMAL DEFAULT 0,
     conta_data VARCHAR(15),
     conta_codigo VARCHAR(100) NOT NULL
     )
