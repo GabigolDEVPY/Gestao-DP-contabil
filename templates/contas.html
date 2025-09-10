@@ -10,7 +10,7 @@
   </div>
   
   <div class="content-card">
-    <form id="contaForm" class="form-grid">
+    <form action="{{ url_for(contas.criar_conta) }}" id="contaForm" class="form-grid" method="post">
       <div class="form-group">
         <label for="idEmpresa">ID Empresa</label>
         <input type="text" id="idEmpresa" name="id_empresa" placeholder="ID da empresa..." required>
@@ -23,7 +23,12 @@
         <label for="contaDesc">Código</label>
         <input type="text" id="contaDesc" placeholder="Código da conta..." required>
       </div>
-
+      <div class="form-group">
+        <select name="tipo" id="tipo_empresa">
+          <option value="Matriz">Matriz</option>
+          <option value="Filial">Filial</option>
+        </select>
+      </div>
       <div class="form-actions">
         <button type="submit" class="btn btn-primary">
           <i class="fas fa-plus"></i> Adicionar Conta
@@ -32,48 +37,6 @@
     </form>
   </div>
   
-  <div class="content-card">
-    <form id="contaForm" class="form-grid">
-      <div class="form-group">
-        <label for="idEmpresa">ID Empresa</label>
-        <input type="text" id="idEmpresa" name="id_empresa" placeholder="ID da empresa..." required>
-      </div>
-      <div class="form-group">
-        <label for="contaDesc">Conta</label>
-        <input type="text" id="contaDesc" placeholder="Ex: Salário, INSS, FGTS" required>
-      </div>
-      <div class="form-group">
-        <label for="contaDesc">Código</label>
-        <input type="text" id="contaDesc" placeholder="Código da conta..." required>
-      </div>
-
-      <div class="form-actions">
-        <button type="submit" class="btn btn-primary">
-          <i class="fas fa-plus"></i> Adicionar Conta Filial
-        </button>
-      </div>
-    </form>
-  </div>
-
-  <div class="content-card">
-    <form id="contaForm" class="form-grid">
-      <div class="form-group">
-        <label for="contaDesc">Conta</label>
-        <input type="text" id="contaDesc" placeholder="Ex: Salário, INSS, FGTS" required>
-      </div>
-      <div class="form-group">
-        <label for="contaDesc">Código</label>
-        <input type="text" id="contaDesc" placeholder="Código da conta..." required>
-      </div>
-
-      <div class="form-actions">
-        <button type="submit" class="btn btn-primary">
-          <i class="fas fa-plus"></i> Adicionar Conta Padrão
-        </button>
-      </div>
-    </form>
-  </div>
-
 
   <div class="content-card">
     <div class="card-header">
