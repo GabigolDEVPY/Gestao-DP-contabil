@@ -13,4 +13,4 @@ def return_page():
 def criar_conta():
     dados = request.form.to_dict()
     print(dados)
-    redirect(url_for("contas.return_page"))
+    return redirect(url_for("contas.return_page"))

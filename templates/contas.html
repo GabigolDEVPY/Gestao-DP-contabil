@@ -10,18 +10,18 @@
   </div>
   
   <div class="content-card">
-    <form action="{{ url_for(contas.criar_conta) }}" id="contaForm" class="form-grid" method="post">
+    <form action="{{ url_for('contas.criar_conta') }}" id="contaForm" class="form-grid" method="post">
       <div class="form-group">
         <label for="idEmpresa">ID Empresa</label>
         <input type="text" id="idEmpresa" name="id_empresa" placeholder="ID da empresa..." required>
       </div>
       <div class="form-group">
         <label for="contaDesc">Conta</label>
-        <input type="text" id="contaDesc" placeholder="Ex: Salário, INSS, FGTS" required>
+        <input  name="conta" type="text" id="contaDesc" placeholder="Ex: Salário, INSS, FGTS" required>
       </div>
       <div class="form-group">
         <label for="contaDesc">Código</label>
-        <input type="text" id="contaDesc" placeholder="Código da conta..." required>
+        <input name="codigo" type="text" id="contaDesc" placeholder="Código da conta..." required>
       </div>
       <div class="form-group">
         <select name="tipo" id="tipo_empresa">
