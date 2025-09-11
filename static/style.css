@@ -545,17 +545,29 @@ a {
   font-weight: 400;
 }
 
-/* Formulários */
+/* FORMULÁRIOS - SEÇÃO CORRIGIDA */
 .form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
   align-items: end;
+}
+
+/* Responsividade para o form-grid */
+@media (min-width: 768px) {
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, max-content));
+    gap: 16px;
+    align-items: end;
+    justify-content: start;
+  }
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
+  min-width: fit-content;
 }
 
 .form-group label {
@@ -563,6 +575,7 @@ a {
   margin-bottom: 6px;
   color: var(--text-primary);
   font-size: 14px;
+  white-space: nowrap;
 }
 
 .form-group input,
@@ -575,6 +588,7 @@ a {
   background: var(--bg-primary);
   color: var(--text-primary);
   transition: all 0.3s ease;
+  min-width: 0; /* Permite que o input seja menor que seu conteúdo */
 }
 
 .form-group input::placeholder,
@@ -594,6 +608,7 @@ a {
 .form-actions {
   display: flex;
   gap: 12px;
+  align-self: end;
 }
 
 /* Botões */
@@ -986,211 +1001,5 @@ select:focus,
 /* Scrollbar personalizada */
 ::-webkit-scrollbar {
   width: 8px;
-  height: 8px;
 }
 
-::-webkit-scrollbar-track {
-  background: var(--bg-primary);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, var(--primary-light), var(--primary-color));
-}
-
-/* Responsividade */
-@media (max-width: 768px) {
-  .sidebar {
-    width: 260px;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-  }
-  
-  .sidebar.open {
-    transform: translateX(0);
-  }
-  
-  .main-content {
-    margin-left: 0;
-    padding: 16px;
-  }
-  
-  .main-header {
-    flex-direction: column;
-    gap: 16px;
-    align-items: stretch;
-  }
-  
-  .search-container {
-    max-width: none;
-  }
-  
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .page-header h1 {
-    font-size: 1.5rem;
-  }
-}
-
-/* Animações adicionais */
-@keyframes glow {
-  0%, 100% {
-    box-shadow: 0 0 5px rgba(0, 212, 170, 0.5);
-  }
-  50% {
-    box-shadow: 0 0 20px rgba(0, 212, 170, 0.8);
-  }
-}
-
-.metric-card:hover .metric-icon {
-  animation: glow 2s infinite;
-}
-
-/* Efeito de partículas de fundo (opcional) */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: radial-gradient(circle at 20% 20%, rgba(0, 212, 170, 0.1) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 80%, rgba(0, 212, 170, 0.05) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: -1;
-}
-
-/* Sobrescrever estilos inline que podem estar causando o fundo branco */
-div[style*="background"] {
-  background: var(--bg-primary) !important;
-}
-
-li[style*="background:#f9f9f9"] {
-  background: var(--bg-secondary) !important;
-}
-
-/* Garantir que todos os textos sigam a paleta */
-.form-filial * {
-  color: var(--text-primary) !important;
-}
-
-.form-filial strong {
-  color: var(--primary-color) !important;
-}
-
-.form-filial small {
-  color: var(--text-muted) !important;
-}
-
-/* Estilização específica para o toggle icon */
-.btn-descricao-toggle span {
-  margin-left: 8px;
-  font-weight: bold;
-  transition: transform 0.3s ease;
-}
-
-.btn-descricao-toggle:hover span {
-  transform: scale(1.2);
-}
-
-.hidden {
-  display: none !important;
-}
-
-/* Estilização adicional para os botões de toggle */
-.btn-descricao-toggle {
-  background: none;
-  border: none;
-  color: #007bff;
-  cursor: pointer;
-  padding: 2px 5px;
-  margin-left: 10px;
-  border-radius: 3px;
-  font-size: 12px;
-}
-
-.btn-descricao-toggle:hover {
-  background-color: #f8f9fa;
-}
-
-.descricao-textarea {
-  width: 100%;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 8px;
-  font-family: inherit;
-  resize: vertical;
-}
-
-
-/* Regras para garantir que elementos hidden fiquem ocultos */
-.hidden {
-  display: none !important;
-}
-
-.form-filial.hidden {
-  display: none !important;
-}
-
-/* Estilização adicional para os botões de toggle */
-.btn-descricao-toggle {
-  background: none;
-  border: none;
-  color: #007bff;
-  cursor: pointer;
-  padding: 2px 5px;
-  margin-left: 10px;
-  border-radius: 3px;
-  font-size: 12px;
-}
-
-.btn-descricao-toggle:hover {
-  background-color: var(--primary-color);
-}
-
-.descricao-textarea {
-  width: 100%;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 8px;
-  font-family: inherit;
-  resize: vertical;
-}
-
-/* Estilização para os botões de toggle das empresas */
-.btn.btn-outline.btn-descricao-toggle {
-  background: var(--primary-color);
-  border: 1px solid #dee2e6;
-  color: #495057;
-  padding: 8px 12px;
-  margin: 8px 0 4px 0;
-  border-radius: 4px;
-  font-size: 14px;
-  width: auto;
-  display: inline-block;
-}
-
-.btn.btn-outline.btn-descricao-toggle:hover {
-  background-color: var(--primary-color);
-  border-color: #adb5bd;
-}
-
-/* Container dos formulários de filiais */
-.form-filial {
-  background: var(--primary-color);
-  border: 1px solid #dee2e6;
-  border-radius: 6px;
-  padding: 15px;
-  margin: 10px 0;
-}

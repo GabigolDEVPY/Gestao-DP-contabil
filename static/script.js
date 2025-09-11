@@ -32,31 +32,6 @@ function mudarCor(select) {
   }[valor] || 'white';
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-  // Inicializa cores e adiciona evento de mudança
-  document.querySelectorAll('.statusSelect').forEach(select => {
-    mudarCor(select); // pinta inicial
-    const contaId = select.getAttribute('data-conta');
-    console.log("Status da conta " + contaId + " carregado.");
-
-    // agora muda quando o usuário troca
-    select.addEventListener('change', () => mudarCor(select));
-  });
-
-  // Garante que linhas ocultas fiquem escondidas
-  document.querySelectorAll('tr.hidden').forEach(row => {
-    row.style.display = 'none';
-  });
-
-  // Liga botões de detalhes
-  document.querySelectorAll('.btn-descricao-toggle').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const codigo = btn.getAttribute("data-codigo");
-      toggledesc(codigo);
-    });
-  });
-});
-
 function toggleForm(id) {
   const div = document.getElementById(id);
   const icon = document.getElementById('toggle-icon-' + id);
@@ -80,3 +55,91 @@ function toggleForm(id) {
     if (icon) icon.textContent = '+';
   }
 }
+
+// Função para controlar o campo ID Empresa baseado no tipo de conta
+function toggleIdEmpresaField() {
+  const tipoContaSelect = document.getElementById('tipo_conta');
+  const idEmpresaInput = document.getElementById('idEmpresa');
+  
+  if (!tipoContaSelect || !idEmpresaInput) return;
+  
+  const tipoContaValue = tipoContaSelect.value;
+  
+  if (tipoContaValue === 'privada') {
+    idEmpresaInput.disabled = false;
+    idEmpresaInput.required = true;
+    idEmpresaInput.placeholder = 'Digite o ID da empresa...';
+  } else {
+    idEmpresaInput.disabled = true;
+    idEmpresaInput.required = false;
+    idEmpresaInput.value = '';
+    idEmpresaInput.placeholder = 'Disponível apenas para contas privadas';
+  }
+}
+
+// Validação do formulário de contas
+function validateContaForm(event) {
+  const tipoContaSelect = document.getElementById('tipo_conta');
+  const idEmpresaInput = document.getElementById('idEmpresa');
+  
+  if (!tipoContaSelect || !idEmpresaInput) return true;
+  
+  const tipoContaValue = tipoContaSelect.value;
+  const idEmpresaValue = idEmpresaInput.value.trim();
+  
+  if (tipoContaValue === 'privada' && !idEmpresaValue) {
+    event.preventDefault();
+    alert('Para contas privadas, o ID da Empresa é obrigatório.');
+    idEmpresaInput.focus();
+    return false;
+  }
+  
+  // Se for conta pública, garante que o ID empresa esteja vazio no envio
+  if (tipoContaValue === 'publica') {
+    idEmpresaInput.value = '';
+  }
+  
+  return true;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Inicializa cores e adiciona evento de mudança
+  document.querySelectorAll('.statusSelect').forEach(select => {
+    mudarCor(select); // pinta inicial
+    const contaId = select.getAttribute('data-conta');
+    console.log("Status da conta " + contaId + " carregado.");
+
+    // agora muda quando o usuário troca
+    select.addEventListener('change', () => mudarCor(select));
+  });
+
+  // Garante que linhas ocultas fiquem escondidas
+  document.querySelectorAll('tr.hidden').forEach(row => {
+    row.style.display = 'none';
+  });
+
+  // Liga botões de detalhes
+  document.querySelectorAll('.btn-descricao-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const codigo = btn.getAttribute("data-codigo");
+      toggledesc(codigo);
+    });
+  });
+
+  // Funcionalidade para o formulário de contas
+  const tipoContaSelect = document.getElementById('tipo_conta');
+  const contaForm = document.getElementById('contaForm');
+  
+  if (tipoContaSelect) {
+    // Event listener para mudança no tipo de conta
+    tipoContaSelect.addEventListener('change', toggleIdEmpresaField);
+    
+    // Executa a função na inicialização
+    toggleIdEmpresaField();
+  }
+  
+  if (contaForm) {
+    // Validação no submit
+    contaForm.addEventListener('submit', validateContaForm);
+  }
+});

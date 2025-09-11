@@ -63,16 +63,19 @@ class Empresa:
     def criar_periodo(dados):
         filiais = execute_command("SELECT id_filial FROM empresas_filiais WHERE empresa_id = ?", (dados["empresa_id"],))
         contas = execute_command("SELECT conta_nome, conta_codigo, conta_tipo FROM contas_modelos")
+        contas_privadas = execute_command("SELECT conta_nome, conta_codigo, conta_tipo FROM contas_privadas WHERE empresa_id = ?", (dados['empresa_id'],))
+        if contas_privadas:
+            contas.extend(contas_privadas)
         if contas is None:
             return "Sem contas para criar período"     
-        if filiais:
-            for filial in filiais:
-                Empresa.criando_periodo(contas=contas, dados=dados, conta_id=filial["id_filial"], tipo="Filial")
         try:
             periodo_id = f"{dados["mes"]}{dados['ano']}{dados["empresa_id"]}"
             execute_command("INSERT INTO periodos (empresa_id, empresa_data, periodo_id) VALUES (?, ?, ?)", (dados['empresa_id'], f"{dados['mes']}/{dados['ano']}", periodo_id))
         except Exception as e:
             return "Periodo já cadastrado!"
+        if filiais:
+            for filial in filiais:
+                Empresa.criando_periodo(contas=contas, dados=dados, conta_id=filial["id_filial"], tipo="Filial")
         Empresa.criando_periodo(contas=contas, conta_id=dados["empresa_id"], dados=dados, tipo="Matriz")   
                 
 

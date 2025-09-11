@@ -36,6 +36,15 @@ CREATE TABLE IF NOT EXISTS contas_modelos (
     tipo VARCHAR(20) DEFAULT "MATRIZ"
     );
 
+CREATE TABLE IF NOT EXISTS contas_privadas (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    empresa_id INT NOT NULL,
+    conta_nome VARCHAR(100) DEFAULT "RANDOM",
+    conta_codigo VARCHAR(100) NOT NULL,
+    conta_tipo VARCHAR(20) DEFAULT "MATRIZ",
+    FOREIGN KEY (empresa_id) REFERENCES empresas(empresa_id)
+    );
+
 ALTER Table contas_modelos 
 RENAME COLUMN tipo TO conta_tipo;
 
