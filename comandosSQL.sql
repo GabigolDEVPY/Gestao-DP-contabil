@@ -52,8 +52,7 @@ CREATE TABLE periodos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     empresa_id INTEGER NOT NULL,
     empresa_data VARCHAR(15) NOT NULL,
-    periodo_id VARCHAR(10) UNIQUE NOT NULL,
-    status VARCHAR(20) DEFAULT "Pendente"
+    periodo_id VARCHAR(10) UNIQUE NOT NULL
 )
 
 SELECT * FROM empresas;

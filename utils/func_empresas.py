@@ -6,25 +6,36 @@ import copy
 class Empresa:
     @staticmethod
     def retornar_empresas():
+
         dados_empresas = execute_command("SELECT * FROM empresas")
         empresas = []
         for empresa in dados_empresas:
-            empresa["contas_pendentes"] = execute_command('SELECT conta_nome, conta_data FROM contas WHERE empresa_id = ? AND conta_status = "Pendente" ', (empresa["empresa_id"],))
-            empresa["periodos"] = execute_command("SELECT empresa_id, empresa_data, status FROM periodos WHERE empresa_id = ?", (empresa["empresa_id"],))
-            def status_periodo(empresa_id=empresa['empresa_id']):        
+            empresa["contas_pendentes"] = execute_command('SELECT conta_nome, conta_data FROM contas WHERE empresa_id = ? AND conta_status != "Feito" ', (empresa["empresa_id"],))
+            empresa["periodos"] = execute_command("SELECT empresa_id, empresa_data FROM periodos WHERE empresa_id = ?", (empresa["empresa_id"],))
+
+            def status_periodo(empresa_id=empresa['empresa_id'], tipo=None):      
                 for periodo in empresa["periodos"]:
+                    print("periodo", periodo)
+                    if tipo == "Filial":
+                        print("filial")
+                        if periodo["status"] == "Pendente":
+                            continue
                     contas = execute_command("SELECT empresa_id, conta_status, conta_data FROM contas WHERE empresa_id = ?", (empresa_id,))
+                    periodo["status"] = "Concluido"
                     for conta in contas:
                         if conta["conta_status"] != "Feito":
+                            print(conta)
                             periodo["status"] = "Pendente"
                             break
-                        periodo["status"] = "Concluido"  
+                    print("status",periodo["status"])    
+
+            status_periodo(empresa_id=empresa["empresa_id"])
                     
             empresa["filiais"] = execute_command("SELECT * FROM empresas_filiais WHERE empresa_id = ?", (empresa["empresa_id"],))
+            print("antes de validar filial", empresa["periodos"])   
             for filial in empresa["filiais"]:
-                status_periodo(empresa_id=filial["id_filial"])
-                filial["contas_pendentes"] = execute_command('SELECT conta_nome, conta_data FROM contas WHERE empresa_id = ? AND conta_status = "Pendente" ', (filial["id_filial"],)) 
-                print(filial["contas_pendentes"])
+                status_periodo(empresa_id=filial["id_filial"], tipo="Filial")
+                filial["contas_pendentes"] = execute_command('SELECT conta_nome, conta_data FROM contas WHERE empresa_id = ? AND conta_status != "Feito" ', (filial["id_filial"],)) 
             empresas.append(empresa) 
         return empresas 
     
