@@ -5,7 +5,6 @@ import sqlite3
 from pathlib import Path
 
 CAMINHO_DB = Path(__file__).parent.parent / "data_base.db"
-print(CAMINHO_DB)
 
 def execute_command(command, value=None):
     conn = sqlite3.connect(CAMINHO_DB)

@@ -12,6 +12,5 @@ def return_page():
 @contas_bp.route("/contas/criar", methods=["POST"])
 def criar_conta():
     dados = request.form.to_dict()
-    print(dados)
     Contas.criar_contas(dados)
     return redirect(url_for("contas.return_page"))

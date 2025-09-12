@@ -17,7 +17,6 @@ def return_page():
 @empresas_bp.route("/empresas/cadastrar", methods=["POST"])
 def cadastrar_empresa():
         dados = request.form.to_dict()
-        print(dados)
         result = Empresa.cadastrar_empresa(dados)
         if result:
                 flash(result)
@@ -27,7 +26,6 @@ def cadastrar_empresa():
 @empresas_bp.route("/empresa/criarperiodo", methods=["POST"])
 def criar_periodo():
         dados = request.form.to_dict()
-        print("Dados front", dados)
         result = Empresa.criar_periodo(dados)
         if result:
                 flash(result)

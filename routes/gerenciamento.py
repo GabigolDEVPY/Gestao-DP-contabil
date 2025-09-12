@@ -19,8 +19,8 @@ def return_empresa():
         if "new" in dados:
                 contas = Gerenciamento.retornar_periodo(dados)
         if "dados" in session:
-                contas = Gerenciamento.retornar_periodo(session["dados"])
-        return render_template("gerenciamento.html", contas=contas)
+                contas, empresa, data = Gerenciamento.retornar_periodo(session["dados"])
+        return render_template("gerenciamento.html", contas=contas, empresa=empresa, data=data)
 
 @gerenciamento_bp.route("/gerenciamento/empresa/edit", methods=["POST"])
 def edit_contas():
