@@ -10,14 +10,12 @@ empresas_bp = Blueprint('empresas', __name__)
 
 @empresas_bp.route("/empresas", methods=["GET"])
 def return_page():
-        empresas = Empresa.retornar_empresas()
-        return render_template("empresas.html", empresas=empresas)
+        return render_template("empresas.html", empresas=Empresa.retornar_empresas())
 
 
 @empresas_bp.route("/empresas/cadastrar", methods=["POST"])
 def cadastrar_empresa():
-        dados = request.form.to_dict()
-        result = Empresa.cadastrar_empresa(dados)
+        result = Empresa.cadastrar_empresa(request.form.to_dict())
         if result:
                 flash(result)
                 return redirect(url_for("empresas.return_page"))
@@ -25,8 +23,7 @@ def cadastrar_empresa():
 
 @empresas_bp.route("/empresa/criarperiodo", methods=["POST"])
 def criar_periodo():
-        dados = request.form.to_dict()
-        result = Empresa.criar_periodo(dados)
+        result = Empresa.criar_periodo(request.form.to_dict())
         if result:
                 flash(result)
                 return redirect(url_for("empresas.return_page"))

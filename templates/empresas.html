@@ -19,7 +19,7 @@
         </div>
         <div class="form-group">
           <label for="empresaCnpj">CNPJ</label>
-          <input style="height: 41px;" name="empresa_cnpj" type="number" id="empresaCnpj" placeholder="XX.XXX.XXX/XXXX-XX" maxlength="14" minlength="14">
+          <input style="height: 41px;" name="empresa_cnpj" type="text" id="empresaCnpj" placeholder="XX.XXX.XXX/XXXX-XX" maxlength="14" minlength="14"  pattern="\d{14}">
           <input type="hidden"  name="tipo" value="matriz">
         </div>
         <div class="form-actions">

@@ -51,72 +51,73 @@
       </div>
     </form>
   </div>
-
+  {% if contas %}
   <!-- Tabela -->
-  <div class="content-card">
-    <div class="card-header">
-      <h3>Empresa {{ empresa }}</h3>
-      <h3>Contas Referente à Data - {{ data }}</h3>
-    </div>
-    <div class="table-container">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Código</th>
-            <th>Descrição</th>
-            <th>Valor Total</th>
-            <th>Valor Fechado</th>
-            <th>Diferença</th>
-            <th>Status</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="contaLista">
-          {% for conta in contas %}
-          <form action="{{url_for( 'gerenciamento.edit_contas')}}" method="post">
+    <div class="content-card">
+      <div class="card-header">
+        <h3>Empresa - {{ empresa  }}</h3>
+        <h3>Contas Referente à Data - {{ data }}</h3>
+      </div>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
             <tr>
-              <td><strong>{{ conta.conta_codigo }}</strong></td>
-              <td>
-                {{ conta.conta_nome }}
-                <button type="button" class="btn-descricao-toggle" data-codigo="{{ conta.conta_codigo }}">
-                  <i class="fas fa-chevron-down"></i> Detalhes
-                </button>
-              </td>
-              <td>
-                <input type="number" step="0.01" value="{{ '%.2f'|format(conta.conta_valor_total or 0.0) }}" name="valor_total">
-              </td>
-              <td>
-                <input type="number" step="0.01" value="{{ '%.2f'|format(conta.conta_valor_fechado or 0.0) }}" name="valor_fechado">
-              </td>
-              <td>
-                <span style="color: red;">{{ (conta.conta_valor_total or 0) - (conta.conta_valor_fechado or 0) }}</span>
-              </td>
-              <td>
-                <select name="status" id="status_{{ conta.conta_descricao }}" data-conta="{{ conta.codigo }}" class="statusSelect">
-                  <option value="Pendente" {% if conta.conta_status == 'Pendente' %}selected{% endif %}>Pendente</option>
-                  <option value="Feito" {% if conta.conta_status == 'Feito' %}selected{% endif %}>Feito</option>
-                  <option value="Fazendo" {% if conta.conta_status == 'Fazendo' %}selected{% endif %}>Fazendo</option>
-                </select>
-              </td>
-              <td class="salvar-container">
-                <button type="submit" class="btn-salvar">Salvar</button>
-              </td>
+              <th>Código</th>
+              <th>Descrição</th>
+              <th>Valor Total</th>
+              <th>Valor Fechado</th>
+              <th>Diferença</th>
+              <th>Status</th>
+              <th></th>
             </tr>
-            <tr id="detalhe-{{ conta.conta_codigo }}" class="hidden">
-              <td colspan="7">
-                <textarea name="descricao" class="descricao-textarea" rows="3" placeholder="Digite a descrição detalhada da conta...">{{ conta.conta_descricao or '' }}</textarea>
-              </td>
+          </thead>
+          <tbody id="contaLista">
+            {% for conta in contas %}
+            <form action="{{url_for( 'gerenciamento.edit_contas')}}" method="post">
+              <tr>
+                <td><strong>{{ conta.conta_codigo }}</strong></td>
+                <td>
+                  {{ conta.conta_nome }}
+                  <button type="button" class="btn-descricao-toggle" data-codigo="{{ conta.conta_codigo }}">
+                    <i class="fas fa-chevron-down"></i> Detalhes
+                  </button>
+                </td>
+                <td>
+                  <input type="number" step="0.01" value="{{ '%.2f'|format(conta.conta_valor_total or 0.0) }}" name="valor_total">
+                </td>
+                <td>
+                  <input type="number" step="0.01" value="{{ '%.2f'|format(conta.conta_valor_fechado or 0.0) }}" name="valor_fechado">
+                </td>
+                <td>
+                  <span style="color: red;">{{ (conta.conta_valor_total or 0) - (conta.conta_valor_fechado or 0) }}</span>
+                </td>
+                <td>
+                  <select name="status" id="status_{{ conta.conta_descricao }}" data-conta="{{ conta.codigo }}" class="statusSelect">
+                    <option value="Pendente" {% if conta.conta_status == 'Pendente' %}selected{% endif %}>Pendente</option>
+                    <option value="Feito" {% if conta.conta_status == 'Feito' %}selected{% endif %}>Feito</option>
+                    <option value="Fazendo" {% if conta.conta_status == 'Fazendo' %}selected{% endif %}>Fazendo</option>
+                  </select>
+                </td>
+                <td class="salvar-container">
+                  <button type="submit" class="btn-salvar">Salvar</button>
+                </td>
+              </tr>
+              <tr id="detalhe-{{ conta.conta_codigo }}" class="hidden">
+                <td colspan="7">
+                  <textarea name="descricao" class="descricao-textarea" rows="3" placeholder="Digite a descrição detalhada da conta...">{{ conta.conta_descricao or '' }}</textarea>
+                </td>
+              </tr>
+              <input type="hidden" value="{{ conta.id }}" name="id">
+            </form>
+            {% else %}
+            <tr>
+              <td colspan="7" style="text-align: center; color: #888;">Nenhuma conta registrada</td>
             </tr>
-            <input type="hidden" value="{{ conta.id }}" name="id">
-          </form>
-          {% else %}
-          <tr>
-            <td colspan="7" style="text-align: center; color: #888;">Nenhuma conta registrada</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
+  {% endif %}  
 </section>
 {% endblock %}
