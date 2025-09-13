@@ -1,13 +1,14 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, redirect, url_for
+from utils.func_dashboard import Dashboard
 
 dashboard_bp = Blueprint('dashboard', __name__)
 
 
 @dashboard_bp.route("/", methods=["GET"])
 def return_home():
-    return render_template("dashboard.html", pendentes="12")
+    return redirect(url_for("dashboard.return_dashboard"))
 
 @dashboard_bp.route("/dashboard", methods=["GET"])
 def return_dashboard():
-    valor= {"total": 18 }
-    return render_template("dashboard.html", valor=valor)
+    contas = Dashboard.return_dashboard()
+    return render_template("dashboard.html", contas=contas)

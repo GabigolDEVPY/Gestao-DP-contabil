@@ -21,7 +21,7 @@
       </div>
       <div class="metric-content">
         <h3>Total de Empresas</h3>
-        <p class="metric-value">{{ total_empresas or 0 }}</p>
+        <p class="metric-value">{{ contas.empresas or 0 }}</p>
         <div class="metric-change positive">
           <i class="fas fa-arrow-up"></i>
           <span>+12% este mês</span>
@@ -39,13 +39,10 @@
       </div>
       <div class="metric-content">
         <h3>Contas Pendentes</h3>
-        <p class="metric-value">{{ pendentes or 0 }}</p>
+        <p class="metric-value">{{ contas.pendente or 0 }}</p>
         <div class="metric-change warning">
           <i class="fas fa-exclamation-triangle"></i>
           <span>Requer atenção</span>
-        </div>
-        <div class="metric-footer">
-          <small>Valor: R$ {{ valor_pendentes or '0,00' }}</small>
         </div>
       </div>
     </div>
@@ -57,13 +54,10 @@
       </div>
       <div class="metric-content">
         <h3>Contas em Andamento</h3>
-        <p class="metric-value">{{ fazendo or 0 }}</p>
+        <p class="metric-value">{{ contas.fazendo or 0 }}</p>
         <div class="metric-change neutral">
           <i class="fas fa-sync-alt fa-spin"></i>
           <span>Em processamento</span>
-        </div>
-        <div class="metric-footer">
-          <small>Valor: R$ {{ valor_fazendo or '0,00' }}</small>
         </div>
       </div>
     </div>
@@ -75,15 +69,11 @@
       </div>
       <div class="metric-content">
         <h3>Contas Concluídas</h3>
-        <p class="metric-value">{{ concluidas or 0 }}</p>
-        <div class="metric-change positive">
-          <i class="fas fa-check"></i>
-          <span>{{ percentual_concluidas or 0 }}% do total</span>
+        <p class="metric-value">{{ contas.feito or 0 }}</p>
+        <div class="metric-change neutral">
+          <i class="fas fa-sync-alt fa-spin"></i>
+          <span>Em processamento</span>
         </div>
-        <div class="metric-footer">
-          <small>Valor: R$ {{ valor_concluidas or '0,00' }}</small>
-        </div>
-      </div>
     </div>
   </div>
 </section>
