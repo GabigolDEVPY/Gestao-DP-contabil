@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from utils.func_contas import Contas
 
 contas_bp = Blueprint('contas', __name__)
@@ -11,5 +11,7 @@ def return_page():
 
 @contas_bp.route("/contas/criar", methods=["POST"])
 def criar_conta():
-    Contas.criar_contas(dados=request.form.to_dict())
+    result = Contas.criar_contas(dados=request.form.to_dict())
+    if result:
+        flash(result)
     return redirect(url_for("contas.return_page"))
