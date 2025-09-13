@@ -11,7 +11,7 @@ class Gerenciamento:
         session["dados"] = dados
         data = f"{dados['mes']}/{dados['ano']}"
         contas = execute_command("SELECT * FROM contas WHERE empresa_id = ? AND conta_data = ?", (dados["codigo"], data))
-        empresa = execute_command("SELECT empresa_nome FROM empresas WHERE empresa_id = ?", (dados["codigo"],))[0]["empresa_nome"]
+        empresa = execute_command("SELECT empresa_nome FROM empresas WHERE empresa_id = ?", (dados["codigo"],))
         return contas, empresa, data
 
     

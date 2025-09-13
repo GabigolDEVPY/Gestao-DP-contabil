@@ -1,6 +1,6 @@
 import sys
 sys.dont_write_bytecode = True
-from flask import Flask, render_template
+from flask import Flask, render_template, session
 from routes.dashboard import dashboard_bp
 from routes.gerenciamento import gerenciamento_bp
 from routes.empresas import empresas_bp
