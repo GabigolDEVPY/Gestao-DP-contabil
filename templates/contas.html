@@ -8,96 +8,209 @@
     <h1>Contas e Obrigações</h1>
     <p>Controle todas as contas e obrigações fiscais</p>
   </div>
-  
+
+  <!-- Formulário de Criação -->
   <div class="content-card">
-    <form action="{{ url_for('contas.criar_conta') }}" id="contaForm" class="form-grid" method="post">
-      <div class="form-group">
-        <label for="idEmpresa">ID Empresa</label>
-        <input type="text" id="idEmpresa" name="id_empresa" placeholder="ID da empresa..." required>
-      </div>
-      <div class="form-group">
-        <label for="contaDesc">Conta</label>
-        <input style="width: 200px;" name="conta" type="text" id="contaDesc" placeholder="Ex: Salário, INSS, FGTS" required>
-      </div>
-      <div class="form-group">
-        <label for="contaDesc">Código</label>
-        <input style="height: 42px;" name="codigo" type="number" id="contaDesc" placeholder="Código da conta..." required>
-      </div>
-      <div class="form-group">
-        <label for="contaDesc">Tipo Empresa</label>
-        <select name="tipo" id="tipo_empresa">
-          <option value="Matriz">Matriz</option>
-          <option value="Filial">Filial</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="contaDesc">Tipo Conta</label>
-        <select name="tipo_conta" id="tipo_conta">
-          <option value="publica">Pública</option>
-          <option value="privada">Privada</option>
-        </select>
-      </div>
-      <div class="form-actions">
-        <button type="submit" class="btn btn-primary">
-          <i class="fas fa-plus"></i> Adicionar Conta
+    <div class="card-header">
+      <h3><i class="fas fa-plus-circle"></i> Adicionar Nova Conta</h3>
+      <div class="card-actions">
+        <button type="button" class="btn btn-secondary" onclick="toggleForm('contaFormContainer')">
+          <span id="toggle-icon-contaFormContainer">+</span> Expandir Formulário
         </button>
       </div>
-    </form>
+    </div>
+    <div id="contaFormContainer" class="hidden">
+      <form action="{{ url_for('contas.criar_conta') }}" method="post" class="form-grid" id="contaForm">
+        <div class="form-group">
+          <label for="idEmpresa">ID Empresa</label>
+          <input type="text" id="idEmpresa" name="id_empresa" placeholder="ID da empresa (somente contas privadas)">
+        </div>
+        <div class="form-group">
+          <label for="conta">Conta</label>
+          <input type="text" id="conta" name="conta" placeholder="Ex: Salário, INSS, FGTS" required>
+        </div>
+        <div class="form-group">
+          <label for="codigo">Código</label>
+          <input type="number" id="codigo" name="codigo" placeholder="Código da conta..." required>
+        </div>
+        <div class="form-group">
+          <label for="tipo_empresa">Tipo Empresa</label>
+          <select id="tipo_empresa" name="tipo">
+            <option value="Matriz">Matriz</option>
+            <option value="Filial">Filial</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="tipo_conta">Tipo Conta</label>
+          <select id="tipo_conta" name="tipo_conta">
+            <option value="publica">Pública</option>
+            <option value="privada">Privada</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Adicionar Conta</button>
+          <button type="reset" class="btn btn-secondary"><i class="fas fa-undo"></i> Limpar</button>
+        </div>
+      </form>
+    </div>
   </div>
-  
 
+  <!-- Contas Públicas -->
   <div class="content-card">
     <div class="card-header">
-      <h3>Contas Padrões</h3>
+      <h3><i class="fas fa-globe"></i> Contas Padrões (Públicas)</h3>
+      <div class="card-actions">
+        <span class="status-badge status-active">{{ contas|length if contas else 0 }} contas</span>
+      </div>
     </div>
-    <ul id="contaLista">
+    <div class="table-container">
       {% if contas %}
-        {% for conta in contas %}
-          <li class="empresa-item">
-            <div class="empresa-header">
-              <strong class="empresa-nome"><strong>Nome</strong>: {{ conta.conta_nome }}</strong>
-            </div>
-            <div class="empresa-details">
-              <span class="empresa-cnpj"><strong>Código</strong>: {{ conta.conta_codigo }}</span>
-            </div>
-            <div class="empresa-details">
-              <span class="empresa-cnpj"><strong>Tipo</strong>: {{ conta.conta_tipo}}</span>
-            </div>
-          </li>
-        {% endfor %}
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th><i class="fas fa-hashtag"></i> Código</th>
+            <th><i class="fas fa-file-invoice"></i> Nome da Conta</th>
+            <th><i class="fas fa-building"></i> Tipo Empresa</th>
+            <th><i class="fas fa-tag"></i> Categoria</th>
+            <th><i class="fas fa-cog"></i> Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for conta in contas %}
+          <tr>
+            <td>#{{ conta.conta_codigo }}</td>
+            <td><strong>{{ conta.conta_nome }}</strong></td>
+            <td>
+              <span class="status-badge {% if conta.conta_tipo == 'Matriz' %}status-active{% else %}status-pending{% endif %}">
+                {{ conta.conta_tipo }}
+              </span>
+            </td>
+            <td><span class="metric-change neutral"><i class="fas fa-globe"></i> Pública</span></td>
+            <td>
+              <div class="card-actions">
+                <form action="{{ url_for('contas.criar_conta') }}" method="post" style="display:inline;">
+                  <input type="hidden" name="id" value="{{ conta.conta_codigo }}">
+                  <button type="submit" class="btn btn-outline"><i class="fas fa-edit"></i></button>
+                </form>
+                <form action="{{ url_for('contas.criar_conta') }}" method="post" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir esta conta?');">
+                  <input type="hidden" name="id" value="{{ conta.conta_codigo }}">
+                  <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
       {% else %}
-        <li>Nenhuma conta registrada ainda.</li>
+      <p class="info-text"><i class="fas fa-info-circle"></i> Nenhuma conta pública registrada ainda.</p>
       {% endif %}
-    </ul>
+    </div>
   </div>
 
+  <!-- Contas Privadas -->
   <div class="content-card">
     <div class="card-header">
-      <h3>Contas Privadas</h3>
+      <h3><i class="fas fa-lock"></i> Contas Privadas</h3>
+      <div class="card-actions">
+        <span class="status-badge status-pending">{{ contas_privadas|length if contas_privadas else 0 }} contas</span>
+      </div>
     </div>
-    <ul id="contaLista">
+    <div class="table-container">
       {% if contas_privadas %}
-        {% for conta in contas_privadas %}
-          <li class="empresa-item">
-            <div class="empresa-header">
-              <strong class="empresa-nome"><strong>Empresa id</strong>: {{ conta.empresa_id }}</strong>
-            </div>
-            <div class="empresa-header">
-              <strong class="empresa-nome"><strong>Nome</strong>: {{ conta.conta_nome }}</strong>
-            </div>
-            <div class="empresa-details">
-              <span class="empresa-cnpj"><strong>Código</strong>: {{ conta.conta_codigo }}</span>
-            </div>
-            <div class="empresa-details">
-              <span class="empresa-cnpj"><strong>Tipo</strong>: {{ conta.conta_tipo}}</span>
-            </div>
-          </li>
-        {% endfor %}
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th><i class="fas fa-building"></i> ID Empresa</th>
+            <th><i class="fas fa-hashtag"></i> Código</th>
+            <th><i class="fas fa-file-invoice"></i> Nome da Conta</th>
+            <th><i class="fas fa-building"></i> Tipo Empresa</th>
+            <th><i class="fas fa-tag"></i> Categoria</th>
+            <th><i class="fas fa-cog"></i> Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for conta in contas_privadas %}
+          <tr>
+            <td>{{ conta.empresa_id }}</td>
+            <td>#{{ conta.conta_codigo }}</td>
+            <td><strong>{{ conta.conta_nome }}</strong></td>
+            <td>
+              <span class="status-badge {% if conta.conta_tipo == 'Matriz' %}status-active{% else %}status-pending{% endif %}">
+                {{ conta.conta_tipo }}
+              </span>
+            </td>
+            <td><span class="metric-change warning"><i class="fas fa-lock"></i> Privada</span></td>
+            <td>
+              <div class="card-actions">
+                <form action="{{ url_for('contas.edit_conta_privada') }}" method="post" style="display:inline;">
+                  <input type="hidden" name="empresa_id" value="{{ conta.empresa_id }}">
+                  <input type="hidden" name="id" value="{{ conta.conta_codigo }}">
+                  <button type="submit" class="btn btn-outline"><i class="fas fa-edit"></i></button>
+                </form>
+                <form action="{{ url_for('contas.delete_conta_privada') }}" method="post" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir esta conta privada?');">
+                  <input type="hidden" name="empresa_id" value="{{ conta.empresa_id }}">
+                  <input type="hidden" name="id" value="{{ conta.conta_codigo }}">
+                  <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
       {% else %}
-        <li>Nenhuma conta registrada ainda.</li>
+      <p class="info-text"><i class="fas fa-info-circle"></i> Nenhuma conta privada registrada ainda.</p>
       {% endif %}
-    </ul>
+    </div>
   </div>
 
+  <!-- Resumo e Estatísticas -->
+  <div class="content-card">
+    <div class="card-header"><h3><i class="fas fa-chart-bar"></i> Resumo das Contas</h3></div>
+    <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+      <div class="metric-card">
+        <div class="metric-icon contas"><i class="fas fa-calculator"></i></div>
+        <div class="metric-content">
+          <h3>Total de Contas</h3>
+          <div class="metric-value">{{ (contas|length if contas else 0) + (contas_privadas|length if contas_privadas else 0) }}</div>
+          <div class="metric-change neutral"><i class="fas fa-list"></i> Todas as categorias</div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon empresas"><i class="fas fa-globe"></i></div>
+        <div class="metric-content">
+          <h3>Contas Públicas</h3>
+          <div class="metric-value">{{ contas|length if contas else 0 }}</div>
+          <div class="metric-change positive"><i class="fas fa-check"></i> Padrão do sistema</div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon pendentes"><i class="fas fa-lock"></i></div>
+        <div class="metric-content">
+          <h3>Contas Privadas</h3>
+          <div class="metric-value">{{ contas_privadas|length if contas_privadas else 0 }}</div>
+          <div class="metric-change warning"><i class="fas fa-building"></i> Por empresa</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const contadores = document.querySelectorAll('#contas .metric-value');
+  contadores.forEach(contador => {
+    const valor = parseInt(contador.textContent) || 0;
+    let atual = 0;
+    const incremento = valor / 30;
+    contador.textContent = '0';
+    const intervalo = setInterval(() => {
+      atual += incremento;
+      if(atual >= valor) { contador.textContent = valor; clearInterval(intervalo); }
+      else contador.textContent = Math.floor(atual);
+    }, 50);
+  });
+});
+</script>
 {% endblock %}

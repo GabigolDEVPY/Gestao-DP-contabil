@@ -4,7 +4,7 @@
 <section id="dashboard" class="tab-content active">
   <div class="page-header">
     <h1>Dashboard</h1>
-    <p>Visão geral do sistema financeiro</p>
+    <p>Visão geral do sistema de atividades</p>
     <div class="dashboard-stats">
       <span class="dashboard-date">
         <i class="fas fa-calendar-alt"></i>
@@ -21,13 +21,31 @@
       </div>
       <div class="metric-content">
         <h3>Total de Empresas</h3>
-        <p class="metric-value">{{ contas.empresas or 0 }}</p>
-        <div class="metric-change positive">
-          <i class="fas fa-arrow-up"></i>
-          <span>+12% este mês</span>
+        <div class="metric-value" data-target="{{ contas.empresas or 0 }}">{{ contas.empresas or 0 }}</div>
+        <div class="metric-change neutral">
+          <i class="fas fa-chart-line"></i>
+          <span>Sistema ativo</span>
         </div>
         <div class="metric-footer">
           <small>Incluindo filiais</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total de Contas -->
+    <div class="metric-card" data-metric="contas">
+      <div class="metric-icon contas">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="metric-content">
+        <h3>Total de Contas</h3>
+        <div class="metric-value" data-target="{{ (contas.pendente or 0) + (contas.fazendo or 0) + (contas.feito or 0) }}">{{ (contas.pendente or 0) + (contas.fazendo or 0) + (contas.feito or 0) }}</div>
+        <div class="metric-change positive">
+          <i class="fas fa-arrow-up"></i>
+          <span>Todas as contas</span>
+        </div>
+        <div class="metric-footer">
+          <small>Todos os status</small>
         </div>
       </div>
     </div>
@@ -39,10 +57,13 @@
       </div>
       <div class="metric-content">
         <h3>Contas Pendentes</h3>
-        <p class="metric-value">{{ contas.pendente or 0 }}</p>
+        <div class="metric-value" data-target="{{ contas.pendente or 0 }}">{{ contas.pendente or 0 }}</div>
         <div class="metric-change warning">
           <i class="fas fa-exclamation-triangle"></i>
           <span>Requer atenção</span>
+        </div>
+        <div class="metric-footer">
+          <small>Aguardando processamento</small>
         </div>
       </div>
     </div>
@@ -54,10 +75,13 @@
       </div>
       <div class="metric-content">
         <h3>Contas em Andamento</h3>
-        <p class="metric-value">{{ contas.fazendo or 0 }}</p>
+        <div class="metric-value" data-target="{{ contas.fazendo or 0 }}">{{ contas.fazendo or 0 }}</div>
         <div class="metric-change neutral">
           <i class="fas fa-sync-alt fa-spin"></i>
-          <span>Em processamento</span>
+          <span class="loading-text">Em processamento<span class="dots"></span></span>
+        </div>
+        <div class="metric-footer">
+          <small>Sendo processadas</small>
         </div>
       </div>
     </div>
@@ -69,71 +93,136 @@
       </div>
       <div class="metric-content">
         <h3>Contas Concluídas</h3>
-        <p class="metric-value">{{ contas.feito or 0 }}</p>
-        <div class="metric-change neutral">
-          <i class="fas fa-sync-alt fa-spin"></i>
-          <span>Em processamento</span>
+        <div class="metric-value" data-target="{{ contas.feito or 0 }}">{{ contas.feito or 0 }}</div>
+        <div class="metric-change success">
+          <i class="fas fa-check"></i>
+          <span>Finalizadas</span>
         </div>
+        <div class="metric-footer">
+          <small>Processamento completo</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card de Progresso -->
+    <div class="metric-card" data-metric="progresso">
+      <div class="metric-icon faturamento">
+        <i class="fas fa-chart-pie"></i>
+      </div>
+      <div class="metric-content">
+        <h3>Taxa de Conclusão</h3>
+        <div class="metric-value" data-target="{% if (contas.pendente or 0) + (contas.fazendo or 0) + (contas.feito or 0) > 0 %}{{ ((contas.feito or 0) * 100 / ((contas.pendente or 0) + (contas.fazendo or 0) + (contas.feito or 0)))|round|int }}{% else %}0{% endif %}">
+          {% if (contas.pendente or 0) + (contas.fazendo or 0) + (contas.feito or 0) > 0 %}
+            {{ ((contas.feito or 0) * 100 / ((contas.pendente or 0) + (contas.fazendo or 0) + (contas.feito or 0)))|round|int }}%
+          {% else %}
+            0%
+          {% endif %}
+        </div>
+        <div class="metric-change {% if ((contas.feito or 0) * 100 / ((contas.pendente or 0) + (contas.fazendo or 0) + (contas.feito or 0) if (contas.pendente or 0) + (contas.fazendo or 0) + (contas.feito or 0) > 0 else 1))|round >= 75 %}success{% elif ((contas.feito or 0) * 100 / ((contas.pendente or 0) + (contas.fazendo or 0) + (contas.feito or 0) if (contas.pendente or 0) + (contas.fazendo or 0) + (contas.feito or 0) > 0 else 1))|round >= 50 %}positive{% else %}warning{% endif %}">
+          <i class="fas fa-percentage"></i>
+          <span>Do total</span>
+        </div>
+        <div class="metric-footer">
+          <small>Eficiência do sistema</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Atividades Recentes -->
+  <div class="recent-activity">
+    <div class="activity-header">
+      <h3>
+        <i class="fas fa-clock"></i>
+        Atividades Recentes
+      </h3>
+      <button class="btn btn-outline" onclick="location.reload()">
+        <i class="fas fa-sync-alt"></i>
+        Atualizar
+      </button>
+    </div>
+    
+    <div class="activity-list">
+      <div class="activity-item">
+        <div class="activity-icon">
+          <i class="fas fa-plus"></i>
+        </div>
+        <div class="activity-content">
+          <p>Sistema iniciado com sucesso</p>
+          <span class="activity-time">Hoje</span>
+        </div>
+      </div>
+      
+      {% if contas.pendente and contas.pendente > 0 %}
+      <div class="activity-item">
+        <div class="activity-icon">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="activity-content">
+          <p>{{ contas.pendente }} conta(s) aguardando processamento</p>
+          <span class="activity-time">Status atual</span>
+        </div>
+      </div>
+      {% endif %}
+      
+      {% if contas.fazendo and contas.fazendo > 0 %}
+      <div class="activity-item">
+        <div class="activity-icon">
+          <i class="fas fa-cog fa-spin"></i>
+        </div>
+        <div class="activity-content">
+          <p>{{ contas.fazendo }} conta(s) sendo processada(s)</p>
+          <span class="activity-time">Em andamento</span>
+        </div>
+      </div>
+      {% endif %}
+      
+      {% if contas.feito and contas.feito > 0 %}
+      <div class="activity-item">
+        <div class="activity-icon">
+          <i class="fas fa-check"></i>
+        </div>
+        <div class="activity-content">
+          <p>{{ contas.feito }} conta(s) processada(s) com sucesso</p>
+          <span class="activity-time">Concluído</span>
+        </div>
+      </div>
+      {% endif %}
     </div>
   </div>
 </section>
 
+<!-- Script para testar a animação manualmente -->
 <script>
-// Atualizar data atual
-document.getElementById('current-date').textContent = new Date().toLocaleDateString('pt-BR', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-  hour: '2-digit',
-  minute: '2-digit'
-});
-
-// Animação de contadores
-function animateCounters() {
-  const counters = document.querySelectorAll('.metric-value');
+// Função para testar a animação no console
+window.testDashboardAnimation = function() {
+  console.log('🧪 Teste manual da animação iniciado...');
+  const values = document.querySelectorAll('.metric-value');
+  console.log(`Encontrados ${values.length} elementos .metric-value`);
   
-  counters.forEach(counter => {
-    const target = parseInt(counter.textContent.replace(/[^\d]/g, ''));
-    const increment = target / 50;
-    let current = 0;
-    
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= target) {
-        counter.textContent = counter.textContent.includes('R$') 
-          ? `R$ ${target.toLocaleString('pt-BR')}` 
-          : target.toLocaleString('pt-BR');
-        clearInterval(timer);
-      } else {
-        counter.textContent = counter.textContent.includes('R$') 
-          ? `R$ ${Math.floor(current).toLocaleString('pt-BR')}` 
-          : Math.floor(current).toLocaleString('pt-BR');
-      }
-    }, 20);
-  });
-}
+  if (values.length > 0) {
+    values.forEach((el, i) => console.log(`${i+1}: "${el.textContent}"`));
+    animateCounters();
+  } else {
+    console.error('❌ Nenhum elemento .metric-value encontrado!');
+  }
+};
 
-// Funções dos botões
-function exportarDados() {
-  alert('Função de exportar dados será implementada');
-}
-
-function atualizarDashboard() {
-  location.reload();
-}
-
-// Inicializar animações quando a página carregar
+// Auto-execução quando o dashboard estiver visível
 document.addEventListener('DOMContentLoaded', function() {
-  setTimeout(animateCounters, 500);
-});
-
-// Adicionar interatividade aos cards
-document.querySelectorAll('.metric-card').forEach(card => {
-  card.addEventListener('click', function() {
-    const metric = this.dataset.metric;
-    // Aqui você pode adicionar navegação ou ações específicas
-    console.log(`Clicou no card: ${metric}`);
-  });
+  const dashboard = document.getElementById('dashboard');
+  if (dashboard && dashboard.style.display !== 'none') {
+    console.log('🎯 Dashboard detectado, aguardando elementos...');
+    
+    // Aguarda um momento para garantir que tudo carregou
+    setTimeout(() => {
+      const counters = document.querySelectorAll('.metric-value');
+      if (counters.length > 0) {
+        console.log('✅ Iniciando animação automática...');
+        animateCounters();
+      }
+    }, 500);
+  }
 });
 </script>
 {% endblock %}
