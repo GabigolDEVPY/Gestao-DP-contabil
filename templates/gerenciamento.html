@@ -9,6 +9,9 @@
 
   <!-- Formulário -->
   <div class="content-card">
+    <div class="card-header">
+      <h3>Buscar Dados da Empresa</h3>
+    </div>
     <form id="contaForm" action="{{ url_for('gerenciamento.return_empresa') }}" method="post" class="form-grid">
       <div class="form-group">
         <label for="contaDesc">Código da Empresa</label>
@@ -51,73 +54,157 @@
       </div>
     </form>
   </div>
+
   {% if contas %}
-  <!-- Tabela -->
-    <div class="content-card">
-      <div class="card-header">
-        <h3>Empresa - {{ empresa  }}</h3>
-        <h3>Contas Referente à Data - {{ data }}</h3>
+  <!-- Informações da Empresa -->
+  <div class="content-card">
+    <div class="card-header">
+      <h3>Empresa - {{ empresa  }}</h3>
+      <h3>Contas Referente à Data - {{ data }}</h3>
+    </div>
+
+    <!-- Dashboard com métricas -->
+    <div class="dashboard-grid">
+      <div class="metric-card">
+        <div class="metric-icon contas">
+          <i class="fas fa-list-alt"></i>
+        </div>
+        <div class="metric-content">
+          <h3>Total de Contas</h3>
+          <div class="metric-value">{{ contas|length }}</div>
+          <div class="metric-footer">Contas cadastradas</div>
+        </div>
       </div>
-      <div class="table-container">
-        <table class="data-table">
-          <thead>
+
+      <div class="metric-card">
+        <div class="metric-icon pendentes">
+          <i class="fas fa-clock"></i>
+        </div>
+        <div class="metric-content">
+          <h3>Pendentes</h3>
+          <div class="metric-value">{{ contas|selectattr('conta_status', 'equalto', 'Pendente')|list|length }}</div>
+          <div class="metric-change warning">
+            <i class="fas fa-exclamation-triangle"></i>
+            Aguardando
+          </div>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-icon fazendo">
+          <i class="fas fa-spinner"></i>
+        </div>
+        <div class="metric-content">
+          <h3>Em Andamento</h3>
+          <div class="metric-value">{{ contas|selectattr('conta_status', 'equalto', 'Fazendo')|list|length }}</div>
+          <div class="metric-change neutral">
+            <i class="fas fa-play-circle"></i>
+            Processando
+          </div>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-icon concluidas">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="metric-content">
+          <h3>Concluídas</h3>
+          <div class="metric-value">{{ contas|selectattr('conta_status', 'equalto', 'Feito')|list|length }}</div>
+          <div class="metric-change success">
+            <i class="fas fa-check"></i>
+            Finalizadas
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabela -->
+  <div class="content-card">
+    <div class="card-header">
+      <h3>Contas Detalhadas</h3>
+    </div>
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Descrição</th>
+            <th>Valor Total</th>
+            <th>Valor Fechado</th>
+            <th>Diferença</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="contaLista">
+          {% for conta in contas %}
+          <form action="{{url_for( 'gerenciamento.edit_contas')}}" method="post">
             <tr>
-              <th>Código</th>
-              <th>Descrição</th>
-              <th>Valor Total</th>
-              <th>Valor Fechado</th>
-              <th>Diferença</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="contaLista">
-            {% for conta in contas %}
-            <form action="{{url_for( 'gerenciamento.edit_contas')}}" method="post">
-              <tr>
-                <td><strong>{{ conta.conta_codigo }}</strong></td>
-                <td>
-                  {{ conta.conta_nome }}
+              <td>
+                <span class="status-badge status-active">{{ conta.conta_codigo }}</span>
+              </td>
+              <td>
+                <div>
+                  <strong>{{ conta.conta_nome }}</strong>
                   <button type="button" class="btn-descricao-toggle" data-codigo="{{ conta.conta_codigo }}">
                     <i class="fas fa-chevron-down"></i> Detalhes
                   </button>
-                </td>
-                <td>
-                  <input type="number" step="0.01" value="{{ '%.2f'|format(conta.conta_valor_total or 0.0) }}" name="valor_total">
-                </td>
-                <td>
-                  <input type="number" step="0.01" value="{{ '%.2f'|format(conta.conta_valor_fechado or 0.0) }}" name="valor_fechado">
-                </td>
-                <td>
-                  <span style="color: red;">{{ (conta.conta_valor_total or 0) - (conta.conta_valor_fechado or 0) }}</span>
-                </td>
-                <td>
-                  <select name="status" id="status_{{ conta.conta_descricao }}" data-conta="{{ conta.codigo }}" class="statusSelect">
-                    <option value="Pendente" {% if conta.conta_status == 'Pendente' %}selected{% endif %}>Pendente</option>
-                    <option value="Feito" {% if conta.conta_status == 'Feito' %}selected{% endif %}>Feito</option>
-                    <option value="Fazendo" {% if conta.conta_status == 'Fazendo' %}selected{% endif %}>Fazendo</option>
-                  </select>
-                </td>
-                <td class="salvar-container">
-                  <button type="submit" class="btn-salvar">Salvar</button>
-                </td>
-              </tr>
-              <tr id="detalhe-{{ conta.conta_codigo }}" class="hidden">
-                <td colspan="7">
-                  <textarea name="descricao" class="descricao-textarea" rows="3" placeholder="Digite a descrição detalhada da conta...">{{ conta.conta_descricao or '' }}</textarea>
-                </td>
-              </tr>
-              <input type="hidden" value="{{ conta.id }}" name="id">
-            </form>
-            {% else %}
-            <tr>
-              <td colspan="7" style="text-align: center; color: #888;">Nenhuma conta registrada</td>
+                </div>
+              </td>
+              <td>
+                <input type="number" step="0.01" value="{{ '%.2f'|format(conta.conta_valor_total or 0.0) }}" name="valor_total">
+              </td>
+              <td>
+                <input type="number" step="0.01" value="{{ '%.2f'|format(conta.conta_valor_fechado or 0.0) }}" name="valor_fechado">
+              </td>
+              <td>
+                {% set diferenca = (conta.conta_valor_total or 0) - (conta.conta_valor_fechado or 0) %}
+                <span class="{% if diferenca > 0 %}status-pending{% elif diferenca < 0 %}status-active{% else %}status-inactive{% endif %}">
+                  R$ {{ "%.2f"|format(diferenca) }}
+                </span>
+              </td>
+              <td>
+                <select name="status" id="status_{{ conta.conta_descricao }}" data-conta="{{ conta.codigo }}" class="statusSelect">
+                  <option value="Pendente" {% if conta.conta_status == 'Pendente' %}selected{% endif %}>Pendente</option>
+                  <option value="Feito" {% if conta.conta_status == 'Feito' %}selected{% endif %}>Feito</option>
+                  <option value="Fazendo" {% if conta.conta_status == 'Fazendo' %}selected{% endif %}>Fazendo</option>
+                </select>
+              </td>
+              <td class="salvar-container">
+                <button type="submit" class="btn-salvar">
+                  <i class="fas fa-save"></i> Salvar
+                </button>
+              </td>
             </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+            <tr id="detalhe-{{ conta.conta_codigo }}" class="hidden">
+              <td colspan="7">
+                <div class="content-card" style="margin: 16px 0; background: var(--bg-primary);">
+                  <div class="observacao-section">
+                    <label for="descricao">Descrição Detalhada</label>
+                    <textarea name="descricao" class="descricao-textarea" rows="4" placeholder="Digite a descrição detalhada da conta...">{{ conta.conta_descricao or '' }}</textarea>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <input type="hidden" value="{{ conta.id }}" name="id">
+          </form>
+          {% else %}
+          <tr>
+            <td colspan="7" style="text-align: center; color: #888; padding: 40px;">
+              <div>
+                <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 16px; display: block; color: var(--border-color);"></i>
+                <strong>Nenhuma conta registrada</strong>
+                <p style="margin-top: 8px;">Não há dados para o período selecionado</p>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+  </div>
   {% endif %}  
 </section>
 {% endblock %}
