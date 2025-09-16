@@ -15,7 +15,7 @@
     <form action="{{ url_for('empresas.cadastrar_empresa') }}" id="empresaForm" class="form-grid" method="post">
       <div class="form-group">
         <label for="empresaId">ID da Empresa</label>
-        <input name="empresa_id" type="number" id="empresaId" placeholder="Digite o ID" required>
+        <input style="height: 43px;" name="empresa_id" type="number" id="empresaId" placeholder="Digite o ID" required>
       </div>
       <div class="form-group">
         <label for="empresaNome">Nome da Empresa</label>
@@ -117,14 +117,6 @@
   <div class="content-card">
     <div class="card-header">
       <h3>Empresas Cadastradas</h3>
-      <div class="card-actions">
-        <button type="button" class="btn btn-outline">
-          <i class="fas fa-download"></i> Exportar
-        </button>
-        <button type="button" class="btn btn-secondary">
-          <i class="fas fa-sync-alt"></i> Atualizar
-        </button>
-      </div>
     </div>
 
     {% if empresas|length > 0 %}

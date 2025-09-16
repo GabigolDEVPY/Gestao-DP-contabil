@@ -23,3 +23,13 @@ class Contas:
             if "UNIQUE constraint failed" in str(e):
                 return "Já existe uma conta cadastrada com esse códgo ou nome!"
         return
+    
+    @staticmethod
+    def deletar_conta(dados):
+        print("dados a excluir", dados)
+        execute_command("DELETE FROM contas_modelos WHERE conta_codigo = ?", (dados["id"],))
+
+    @staticmethod
+    def editar_conta(dados):
+        print("dados a editar", dados)
+        execute_command("UPDATE FROM contas_modelos SET conta_nome,conta_codigo, conta_tipo  WHERE conta_codigo = ?", (dados["id"],))

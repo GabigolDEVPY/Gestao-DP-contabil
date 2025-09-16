@@ -15,3 +15,14 @@ def criar_conta():
     if result:
         flash(result)
     return redirect(url_for("contas.return_page"))
+
+@contas_bp.route("/contas/delete", methods=["POST"])
+def delete_conta():
+    result = Contas.deletar_conta(dados=request.form.to_dict())
+    return redirect(url_for("contas.return_page"))
+
+
+@contas_bp.route("/contas/edit", methods=["POST"])
+def edit_conta():
+    result = Contas.editar_conta(dados=request.form.to_dict())
+    return redirect(url_for("contas.return_page"))

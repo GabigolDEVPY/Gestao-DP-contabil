@@ -8,8 +8,7 @@
     <h1>Contas e Obrigações</h1>
     <p>Controle todas as contas e obrigações fiscais</p>
   </div>
-
-  <!-- Formulário de Criação -->
+  
   <div class="content-card">
     <div class="card-header">
       <h3><i class="fas fa-plus-circle"></i> Adicionar Nova Conta</h3>
@@ -31,7 +30,7 @@
         </div>
         <div class="form-group">
           <label for="codigo">Código</label>
-          <input type="number" id="codigo" name="codigo" placeholder="Código da conta..." required>
+          <input style="height: 43px;" type="number" id="codigo" name="codigo" placeholder="Código da conta..." required>
         </div>
         <div class="form-group">
           <label for="tipo_empresa">Tipo Empresa</label>
@@ -88,15 +87,53 @@
             <td><span class="metric-change neutral"><i class="fas fa-globe"></i> Pública</span></td>
             <td>
               <div class="card-actions">
-                <form action="{{ url_for('contas.criar_conta') }}" method="post" style="display:inline;">
-                  <input type="hidden" name="id" value="{{ conta.conta_codigo }}">
-                  <button type="submit" class="btn btn-outline"><i class="fas fa-edit"></i></button>
-                </form>
-                <form action="{{ url_for('contas.criar_conta') }}" method="post" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir esta conta?');">
+                <button type="button" class="btn btn-outline" data-toggle-edit="editForm-publica-{{ conta.conta_codigo }}">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <form action="{{ url_for('contas.delete_conta') }}" method="post" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir esta conta?');">
                   <input type="hidden" name="id" value="{{ conta.conta_codigo }}">
                   <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                 </form>
               </div>
+            </td>
+          </tr>
+          <!-- Formulário de Edição -->
+          <tr id="editForm-publica-{{ conta.conta_codigo }}" class="edit-form-row hidden">
+            <td colspan="5" class="edit-form-container">
+              <div class="card-header">
+                <h4><i class="fas fa-edit"></i> Editando: {{ conta.conta_nome }}</h4>
+              </div>
+              <form action="{{ url_for('contas.edit_conta') }}" method="post" class="form-grid">
+                <input type="hidden" name="original_codigo" value="{{ conta.conta_codigo }}">
+                <input type="hidden" name="tipo_conta" value="publica">
+                
+                <div class="form-group">
+                  <label for="edit_codigo_{{ conta.conta_codigo }}">Código</label>
+                  <input type="number" id="edit_codigo_{{ conta.conta_codigo }}" name="codigo" value="{{ conta.conta_codigo }}" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="edit_conta_{{ conta.conta_codigo }}">Nome da Conta</label>
+                  <input type="text" id="edit_conta_{{ conta.conta_codigo }}" name="conta" value="{{ conta.conta_nome }}" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="edit_tipo_{{ conta.conta_codigo }}">Tipo Empresa</label>
+                  <select id="edit_tipo_{{ conta.conta_codigo }}" name="tipo">
+                    <option value="Matriz" {% if conta.conta_tipo == 'Matriz' %}selected{% endif %}>Matriz</option>
+                    <option value="Filial" {% if conta.conta_tipo == 'Filial' %}selected{% endif %}>Filial</option>
+                  </select>
+                </div>
+                
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Salvar Alterações
+                  </button>
+                  <button type="button" class="btn btn-secondary" data-cancel-edit="editForm-publica-{{ conta.conta_codigo }}">
+                    <i class="fas fa-times"></i> Cancelar
+                  </button>
+                </div>
+              </form>
             </td>
           </tr>
           {% endfor %}
@@ -143,17 +180,60 @@
             <td><span class="metric-change warning"><i class="fas fa-lock"></i> Privada</span></td>
             <td>
               <div class="card-actions">
-                <form action="{{ url_for('contas.edit_conta_privada') }}" method="post" style="display:inline;">
-                  <input type="hidden" name="empresa_id" value="{{ conta.empresa_id }}">
-                  <input type="hidden" name="id" value="{{ conta.conta_codigo }}">
-                  <button type="submit" class="btn btn-outline"><i class="fas fa-edit"></i></button>
-                </form>
-                <form action="{{ url_for('contas.delete_conta_privada') }}" method="post" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir esta conta privada?');">
+                <button type="button" class="btn btn-outline" data-toggle-edit="editForm-privada-{{ conta.empresa_id }}-{{ conta.conta_codigo }}">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <form action="{{ url_for('contas.delete_conta') }}" method="post" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir esta conta privada?');">
                   <input type="hidden" name="empresa_id" value="{{ conta.empresa_id }}">
                   <input type="hidden" name="id" value="{{ conta.conta_codigo }}">
                   <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                 </form>
               </div>
+            </td>
+          </tr>
+          <!-- Formulário de Edição -->
+          <tr id="editForm-privada-{{ conta.empresa_id }}-{{ conta.conta_codigo }}" class="edit-form-row hidden">
+            <td colspan="6" class="edit-form-container">
+              <div class="card-header">
+                <h4><i class="fas fa-edit"></i> Editando: {{ conta.conta_nome }} (ID Empresa: {{ conta.empresa_id }})</h4>
+              </div>
+              <form action="{{ url_for('contas.edit_conta') }}" method="post" class="form-grid">
+                <input type="hidden" name="original_codigo" value="{{ conta.conta_codigo }}">
+                <input type="hidden" name="original_empresa_id" value="{{ conta.empresa_id }}">
+                <input type="hidden" name="tipo_conta" value="privada">
+                
+                <div class="form-group">
+                  <label for="edit_empresa_id_{{ conta.empresa_id }}_{{ conta.conta_codigo }}">ID Empresa</label>
+                  <input type="text" id="edit_empresa_id_{{ conta.empresa_id }}_{{ conta.conta_codigo }}" name="empresa_id" value="{{ conta.empresa_id }}" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="edit_codigo_{{ conta.empresa_id }}_{{ conta.conta_codigo }}">Código</label>
+                  <input type="number" id="edit_codigo_{{ conta.empresa_id }}_{{ conta.conta_codigo }}" name="codigo" value="{{ conta.conta_codigo }}" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="edit_conta_{{ conta.empresa_id }}_{{ conta.conta_codigo }}">Nome da Conta</label>
+                  <input type="text" id="edit_conta_{{ conta.empresa_id }}_{{ conta.conta_codigo }}" name="conta" value="{{ conta.conta_nome }}" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="edit_tipo_{{ conta.empresa_id }}_{{ conta.conta_codigo }}">Tipo Empresa</label>
+                  <select id="edit_tipo_{{ conta.empresa_id }}_{{ conta.conta_codigo }}" name="tipo">
+                    <option value="Matriz" {% if conta.conta_tipo == 'Matriz' %}selected{% endif %}>Matriz</option>
+                    <option value="Filial" {% if conta.conta_tipo == 'Filial' %}selected{% endif %}>Filial</option>
+                  </select>
+                </div>
+                
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Salvar Alterações
+                  </button>
+                  <button type="button" class="btn btn-secondary" data-cancel-edit="editForm-privada-{{ conta.empresa_id }}-{{ conta.conta_codigo }}">
+                    <i class="fas fa-times"></i> Cancelar
+                  </button>
+                </div>
+              </form>
             </td>
           </tr>
           {% endfor %}
@@ -196,21 +276,4 @@
     </div>
   </div>
 </section>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const contadores = document.querySelectorAll('#contas .metric-value');
-  contadores.forEach(contador => {
-    const valor = parseInt(contador.textContent) || 0;
-    let atual = 0;
-    const incremento = valor / 30;
-    contador.textContent = '0';
-    const intervalo = setInterval(() => {
-      atual += incremento;
-      if(atual >= valor) { contador.textContent = valor; clearInterval(intervalo); }
-      else contador.textContent = Math.floor(atual);
-    }, 50);
-  });
-});
-</script>
 {% endblock %}

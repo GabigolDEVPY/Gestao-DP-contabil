@@ -43,28 +43,76 @@ function mudarCor(select) {
   select.style.color = valor ? 'white' : 'black';
 }
 
-// Função para toggle de formulários
+// Função para toggle de formulários CORRIGIDA
 function toggleForm(id) {
   const div = document.getElementById(id);
-  const icon = document.getElementById('toggle-icon-' + id);
-
+  
   if (!div) {
     console.error('Elemento não encontrado:', id);
     return;
   }
 
+  // Verifica se é um formulário de edição (tr element)
+  const isTableRow = div.tagName.toLowerCase() === 'tr';
+  
+  // Encontra o ícone correspondente
+  const icon = document.getElementById('toggle-icon-' + id);
+  
   const isHidden = div.classList.contains('hidden') ||
                    div.style.display === 'none' ||
                    div.style.display === '';
 
   if (isHidden) {
     div.classList.remove('hidden');
-    div.style.display = 'block';
+    
+    if (isTableRow) {
+      div.style.display = 'table-row';
+    } else {
+      div.style.display = 'block';
+    }
+    
     if (icon) icon.textContent = '−';
+    console.log(`Formulário ${id} expandido`);
   } else {
     div.classList.add('hidden');
     div.style.display = 'none';
     if (icon) icon.textContent = '+';
+    console.log(`Formulário ${id} recolhido`);
+  }
+}
+
+// Função específica para toggle de edição de contas
+function toggleEditForm(formId) {
+  console.log('Tentando alternar formulário:', formId);
+  
+  const formRow = document.getElementById(formId);
+  if (!formRow) {
+    console.error('Formulário de edição não encontrado:', formId);
+    return;
+  }
+
+  const isHidden = formRow.classList.contains('hidden') || 
+                   formRow.style.display === 'none' ||
+                   formRow.style.display === '';
+
+  if (isHidden) {
+    // Primeiro fecha outros formulários de edição abertos
+    document.querySelectorAll('tr[id^="editForm-"]').forEach(row => {
+      if (row.id !== formId) {
+        row.classList.add('hidden');
+        row.style.display = 'none';
+      }
+    });
+
+    // Abre o formulário atual
+    formRow.classList.remove('hidden');
+    formRow.style.display = 'table-row';
+    console.log(`Formulário ${formId} aberto`);
+  } else {
+    // Fecha o formulário atual
+    formRow.classList.add('hidden');
+    formRow.style.display = 'none';
+    console.log(`Formulário ${formId} fechado`);
   }
 }
 
@@ -326,6 +374,67 @@ function initializeDashboard() {
 }
 
 // ================================
+// INICIALIZAÇÃO ESPECÍFICA PARA CONTAS
+// ================================
+
+function initializeContasPage() {
+  console.log('📊 Inicializando página de contas...');
+
+  // 1. Configura todos os botões de edição
+  document.querySelectorAll('.btn-outline').forEach(btn => {
+    // Verifica se é um botão de edição baseado no onclick
+    const onclickAttr = btn.getAttribute('onclick');
+    if (onclickAttr && onclickAttr.includes('toggleForm(')) {
+      // Extrai o ID do formulário do onclick
+      const formIdMatch = onclickAttr.match(/toggleForm\('([^']+)'\)/);
+      if (formIdMatch) {
+        const formId = formIdMatch[1];
+        
+        // Remove o onclick inline e adiciona event listener
+        btn.removeAttribute('onclick');
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          toggleEditForm(formId);
+        });
+        
+        console.log(`✅ Event listener adicionado para: ${formId}`);
+      }
+    }
+  });
+
+  // 2. Inicializa contadores da página de contas
+  const contadores = document.querySelectorAll('#contas .metric-value');
+  if (contadores.length > 0) {
+    console.log(`📊 Animando ${contadores.length} contadores da página de contas`);
+    
+    contadores.forEach((contador, index) => {
+      const valor = parseInt(contador.textContent) || 0;
+      let atual = 0;
+      const incremento = valor / 30;
+      contador.textContent = '0';
+      
+      const intervalo = setInterval(() => {
+        atual += incremento;
+        if (atual >= valor) {
+          contador.textContent = valor;
+          clearInterval(intervalo);
+        } else {
+          contador.textContent = Math.floor(atual);
+        }
+      }, 50);
+    });
+  }
+
+  // 3. Garante que todos os formulários de edição começem ocultos
+  document.querySelectorAll('tr[id^="editForm-"]').forEach(row => {
+    row.classList.add('hidden');
+    row.style.display = 'none';
+  });
+
+  console.log('✅ Página de contas inicializada!');
+}
+
+// ================================
 // INICIALIZAÇÃO PRINCIPAL
 // ================================
 
@@ -347,7 +456,7 @@ document.addEventListener('DOMContentLoaded', function() {
     row.style.display = 'none';
   });
   
-  // 3. Botões de toggle de detalhes
+  // 3. Botões de toggle de detalhes (para outras páginas)
   document.querySelectorAll('.btn-descricao-toggle').forEach(btn => {
     btn.addEventListener('click', function() {
       const codigo = this.getAttribute("data-codigo");
@@ -368,10 +477,16 @@ document.addEventListener('DOMContentLoaded', function() {
     contaForm.addEventListener('submit', validateContaForm);
   }
   
-  // 5. Inicialização do Dashboard
+  // 5. Inicialização do Dashboard (se existir)
   initializeDashboard();
   
-  // 6. Botão de refresh (se existir)
+  // 6. Inicialização específica da página de contas (se existir)
+  const contasSection = document.getElementById('contas');
+  if (contasSection) {
+    initializeContasPage();
+  }
+  
+  // 7. Botão de refresh (se existir)
   const refreshBtn = document.querySelector('button[onclick="location.reload()"]');
   if (refreshBtn) {
     refreshBtn.addEventListener('click', function(e) {
@@ -392,13 +507,36 @@ document.addEventListener('DOMContentLoaded', function() {
 window.testDashboardAnimation = testDashboardAnimation;
 window.animateCounters = animateCounters;
 window.updateCurrentDate = updateCurrentDate;
+window.toggleEditForm = toggleEditForm;
+window.toggleForm = toggleForm;
 
 // Debug helper
 window.debugSystem = function() {
   console.log('🔍 === DEBUG DO SISTEMA ===');
   console.log('Dashboard:', document.getElementById('dashboard') ? '✅' : '❌');
+  console.log('Contas section:', document.getElementById('contas') ? '✅' : '❌');
   console.log('Contadores:', document.querySelectorAll('.metric-value').length);
   console.log('Cards:', document.querySelectorAll('.metric-card').length);
   console.log('Selects de status:', document.querySelectorAll('.statusSelect').length);
   console.log('Botões de detalhes:', document.querySelectorAll('.btn-descricao-toggle').length);
+  console.log('Formulários de edição:', document.querySelectorAll('tr[id^="editForm-"]').length);
+  console.log('Botões de edição:', document.querySelectorAll('.btn-outline').length);
 };
+
+// Configura todos os botões de edição
+document.querySelectorAll('[data-toggle-edit]').forEach(btn => {
+  const formId = btn.getAttribute('data-toggle-edit');
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    toggleEditForm(formId);
+  });
+});
+
+// Configura botões de cancelar edição
+document.querySelectorAll('[data-cancel-edit]').forEach(btn => {
+  const formId = btn.getAttribute('data-cancel-edit');
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    toggleEditForm(formId); // vai fechar o form
+  });
+});
