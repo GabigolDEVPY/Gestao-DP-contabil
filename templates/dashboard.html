@@ -191,38 +191,4 @@
     </div>
   </div>
 </section>
-
-<!-- Script para testar a animação manualmente -->
-<script>
-// Função para testar a animação no console
-window.testDashboardAnimation = function() {
-  console.log('🧪 Teste manual da animação iniciado...');
-  const values = document.querySelectorAll('.metric-value');
-  console.log(`Encontrados ${values.length} elementos .metric-value`);
-  
-  if (values.length > 0) {
-    values.forEach((el, i) => console.log(`${i+1}: "${el.textContent}"`));
-    animateCounters();
-  } else {
-    console.error('❌ Nenhum elemento .metric-value encontrado!');
-  }
-};
-
-// Auto-execução quando o dashboard estiver visível
-document.addEventListener('DOMContentLoaded', function() {
-  const dashboard = document.getElementById('dashboard');
-  if (dashboard && dashboard.style.display !== 'none') {
-    console.log('🎯 Dashboard detectado, aguardando elementos...');
-    
-    // Aguarda um momento para garantir que tudo carregou
-    setTimeout(() => {
-      const counters = document.querySelectorAll('.metric-value');
-      if (counters.length > 0) {
-        console.log('✅ Iniciando animação automática...');
-        animateCounters();
-      }
-    }, 500);
-  }
-});
-</script>
 {% endblock %}

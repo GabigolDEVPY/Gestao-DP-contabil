@@ -1,11 +1,18 @@
+// ================================
+// SISTEMA DP & CONTABILIDADE - SCRIPT PRINCIPAL
+// ================================
+
+// Função para controlar abas/tabs
 function openTab(_, id) {
   document.querySelectorAll('.tab-content').forEach(sec => sec.style.display = 'none');
   document.getElementById(id).style.display = 'block';
 }
 
+// Função para toggle de detalhes das contas
 function toggledesc(codigo) {
   const row = document.getElementById("detalhe-" + codigo);
   const button = document.querySelector(`.btn-descricao-toggle[data-codigo="${codigo}"]`);
+  
   if (!row || !button) return;
 
   const icon = button.querySelector("i");
@@ -13,25 +20,30 @@ function toggledesc(codigo) {
   if (row.classList.contains("hidden")) {
     row.classList.remove("hidden");
     row.style.display = "table-row";
-    icon.className = "fas fa-chevron-up";
+    if (icon) icon.className = "fas fa-chevron-up";
     button.innerHTML = '<i class="fas fa-chevron-up"></i> Ocultar';
   } else {
     row.classList.add("hidden");
     row.style.display = "none";
-    icon.className = "fas fa-chevron-down";
+    if (icon) icon.className = "fas fa-chevron-down";
     button.innerHTML = '<i class="fas fa-chevron-down"></i> Detalhes';
   }
 }
 
+// Função para mudar cor do select de status
 function mudarCor(select) {
   const valor = select.value;
-  select.style.backgroundColor = {
+  const cores = {
     'Pendente': '#a74128ff',
-    'Feito': '#28a78cff',
+    'Feito': '#28a78cff', 
     'Fazendo': '#ffa620ff'
-  }[valor] || 'white';
+  };
+  
+  select.style.backgroundColor = cores[valor] || 'white';
+  select.style.color = valor ? 'white' : 'black';
 }
 
+// Função para toggle de formulários
 function toggleForm(id) {
   const div = document.getElementById(id);
   const icon = document.getElementById('toggle-icon-' + id);
@@ -56,7 +68,7 @@ function toggleForm(id) {
   }
 }
 
-// Função para controlar o campo ID Empresa baseado no tipo de conta
+// Função para controlar campo ID Empresa
 function toggleIdEmpresaField() {
   const tipoContaSelect = document.getElementById('tipo_conta');
   const idEmpresaInput = document.getElementById('idEmpresa');
@@ -94,7 +106,6 @@ function validateContaForm(event) {
     return false;
   }
   
-  // Se for conta pública, garante que o ID empresa esteja vazio no envio
   if (tipoContaValue === 'publica') {
     idEmpresaInput.value = '';
   }
@@ -102,93 +113,148 @@ function validateContaForm(event) {
   return true;
 }
 
-// ---------------------------
-// Dashboard (data + contadores) - VERSÃO CORRIGIDA
-// ---------------------------
-function animateCounters() {
-  console.log('Iniciando animação dos contadores...');
+// ================================
+// DASHBOARD - ANIMAÇÕES E CONTADORES
+// ================================
+
+// Função utilitária para aguardar elementos
+function waitForElements(selector, callback, timeout = 5000) {
+  const startTime = Date.now();
   
-  const counters = document.querySelectorAll('.metric-value');
-  console.log(`Encontrados ${counters.length} contadores para animar`);
-  
-  counters.forEach((counter, index) => {
-    console.log(`Processando contador ${index + 1}:`, counter.textContent);
+  function check() {
+    const elements = document.querySelectorAll(selector);
     
-    // Extrai o número do texto, removendo formatações
-    const originalText = counter.textContent.trim();
-    const target = parseInt(originalText.replace(/[^\d]/g, '')) || 0;
-    
-    console.log(`Valor alvo para contador ${index + 1}:`, target);
-    
-    if (target === 0) {
-      counter.textContent = '0';
+    if (elements.length > 0) {
+      callback(elements);
       return;
     }
     
-    // Define o valor inicial como 0
-    counter.textContent = '0';
-    
-    let start = 0;
-    const duration = 2000; // 2 segundos
-    const startTime = performance.now();
-
-    function update(currentTime) {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      
-      // Efeito de easing (ease-out cubic)
-      const eased = 1 - Math.pow(1 - progress, 3);
-      const value = Math.floor(target * eased);
-
-      // Formata o número para português brasileiro
-      counter.textContent = value.toLocaleString('pt-BR');
-
-      if (progress < 1) {
-        requestAnimationFrame(update);
-      } else {
-        // Garante que o valor final seja exato
-        counter.textContent = target.toLocaleString('pt-BR');
-        console.log(`Animação do contador ${index + 1} concluída com valor:`, target);
-      }
+    if (Date.now() - startTime < timeout) {
+      setTimeout(check, 100);
+    } else {
+      console.warn(`Timeout: elementos ${selector} não encontrados em ${timeout}ms`);
     }
-    
-    requestAnimationFrame(update);
-  });
+  }
+  
+  check();
 }
 
-// Função alternativa para debugging
-function testAnimateCounters() {
-  console.log('=== TESTE DE ANIMAÇÃO ===');
+// Função principal para animar contadores
+function animateCounters() {
+  console.log('🎬 Iniciando animação dos contadores...');
+  
   const counters = document.querySelectorAll('.metric-value');
   
   if (counters.length === 0) {
-    console.error('ERRO: Nenhum elemento .metric-value encontrado!');
-    console.log('Elementos disponíveis no dashboard:');
-    const allElements = document.querySelectorAll('#dashboard *');
-    allElements.forEach(el => {
-      if (el.className) console.log(`- ${el.tagName}: ${el.className}`);
+    console.warn('⚠️ Nenhum contador encontrado para animar');
+    return;
+  }
+  
+  console.log(`📊 Encontrados ${counters.length} contadores para animar`);
+  
+  counters.forEach((counter, index) => {
+    const originalText = counter.textContent.trim();
+    console.log(`Contador ${index + 1}: "${originalText}"`);
+    
+    // Extrai o número do texto - suporte para percentuais
+    let target = 0;
+    let isPercentage = originalText.includes('%');
+    
+    if (isPercentage) {
+      target = parseFloat(originalText.replace(/[^\d.]/g, '')) || 0;
+    } else {
+      target = parseInt(originalText.replace(/[^\d]/g, '')) || 0;
+    }
+    
+    console.log(`Valor alvo: ${target}${isPercentage ? '%' : ''}`);
+    
+    // Define valor inicial
+    counter.textContent = isPercentage ? '0%' : '0';
+    
+    if (target === 0) {
+      // Se o alvo é 0, apenas define o valor final
+      counter.textContent = isPercentage ? '0%' : '0';
+      return;
+    }
+    
+    // Configuração da animação
+    const duration = 1500 + (index * 200); // Animações escalonadas
+    const startTime = performance.now();
+
+    function updateCounter(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Efeito de easing suave
+      const eased = progress < 0.5 
+        ? 2 * progress * progress 
+        : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+      
+      const currentValue = Math.round(target * eased);
+      
+      // Atualiza o display
+      if (isPercentage) {
+        counter.textContent = `${currentValue}%`;
+      } else {
+        counter.textContent = currentValue.toLocaleString('pt-BR');
+      }
+
+      if (progress < 1) {
+        requestAnimationFrame(updateCounter);
+      } else {
+        // Valor final exato
+        counter.textContent = isPercentage 
+          ? `${target}%` 
+          : target.toLocaleString('pt-BR');
+        
+        console.log(`✅ Animação ${index + 1} concluída: ${counter.textContent}`);
+      }
+    }
+    
+    // Inicia a animação com delay
+    setTimeout(() => {
+      requestAnimationFrame(updateCounter);
+    }, index * 100);
+  });
+}
+
+// Função para testar animação manualmente
+function testDashboardAnimation() {
+  console.log('🧪 === TESTE MANUAL DA ANIMAÇÃO ===');
+  
+  const dashboard = document.getElementById('dashboard');
+  if (!dashboard) {
+    console.error('❌ Dashboard não encontrado!');
+    return;
+  }
+  
+  const counters = document.querySelectorAll('.metric-value');
+  console.log(`Encontrados ${counters.length} contadores`);
+  
+  if (counters.length === 0) {
+    console.error('❌ Nenhum contador encontrado!');
+    console.log('Elementos disponíveis:');
+    dashboard.querySelectorAll('*').forEach(el => {
+      if (el.className && el.className.includes('metric')) {
+        console.log(`- ${el.tagName}.${el.className}: "${el.textContent}"`);
+      }
     });
     return;
   }
   
-  console.log(`Encontrados ${counters.length} contadores`);
   counters.forEach((counter, i) => {
-    console.log(`Contador ${i + 1}: "${counter.textContent}" - Classes: ${counter.className}`);
+    console.log(`${i + 1}. "${counter.textContent.trim()}" [${counter.className}]`);
   });
   
   animateCounters();
 }
 
-// ---------------------------
-// Inicialização - VERSÃO SUPER OTIMIZADA
-// ---------------------------
-document.addEventListener('DOMContentLoaded', function () {
-  console.log('🌟 DOM carregado, iniciando configurações...');
-  
-  // Atualizar data atual
+// Função para atualizar data atual
+function updateCurrentDate() {
   const dateEl = document.getElementById('current-date');
   if (dateEl) {
-    dateEl.textContent = new Date().toLocaleDateString('pt-BR', {
+    const now = new Date();
+    dateEl.textContent = now.toLocaleDateString('pt-BR', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -197,124 +263,142 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     console.log('📅 Data atualizada:', dateEl.textContent);
   }
+}
 
-  // Inicializa cores e adiciona evento de mudança
+// Função para inicializar dashboard
+function initializeDashboard() {
+  console.log('🚀 Inicializando dashboard...');
+  
+  const dashboardSection = document.getElementById('dashboard');
+  if (!dashboardSection) {
+    console.log('ℹ️ Dashboard não encontrado nesta página');
+    return;
+  }
+  
+  // Atualiza data
+  updateCurrentDate();
+  
+  // Verifica se o dashboard está visível
+  const isVisible = dashboardSection.offsetParent !== null && 
+                   dashboardSection.style.display !== 'none';
+  
+  if (!isVisible) {
+    console.log('ℹ️ Dashboard não está visível');
+    return;
+  }
+  
+  console.log('📊 Dashboard visível, iniciando animações...');
+  
+  // Múltiplas tentativas de animação para garantir sucesso
+  const tryAnimate = (attempt = 1) => {
+    const counters = document.querySelectorAll('.metric-value');
+    
+    if (counters.length > 0) {
+      console.log(`✅ Tentativa ${attempt}: Encontrados ${counters.length} contadores`);
+      animateCounters();
+      return;
+    }
+    
+    if (attempt < 5) {
+      console.log(`⏳ Tentativa ${attempt}: Aguardando contadores... (${attempt * 300}ms)`);
+      setTimeout(() => tryAnimate(attempt + 1), 300);
+    } else {
+      console.warn('⚠️ Contadores não encontrados após 5 tentativas');
+    }
+  };
+  
+  // Inicia as tentativas
+  tryAnimate();
+  
+  // Adiciona interatividade aos cards
+  document.querySelectorAll('.metric-card').forEach(card => {
+    card.addEventListener('click', function() {
+      const metric = this.dataset.metric;
+      console.log(`📊 Card clicado: ${metric}`);
+      
+      // Adiciona efeito visual
+      this.style.transform = 'scale(0.98)';
+      setTimeout(() => {
+        this.style.transform = 'scale(1)';
+      }, 150);
+    });
+  });
+}
+
+// ================================
+// INICIALIZAÇÃO PRINCIPAL
+// ================================
+
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('🌟 Sistema DP & Contabilidade carregado!');
+  
+  // 1. Inicialização dos selects de status
   document.querySelectorAll('.statusSelect').forEach(select => {
     mudarCor(select);
-    const contaId = select.getAttribute('data-conta');
-    console.log("✅ Status da conta " + contaId + " carregado.");
-
-    select.addEventListener('change', () => mudarCor(select));
+    
+    select.addEventListener('change', function() {
+      mudarCor(this);
+      console.log(`Status alterado: Conta ${this.dataset.conta} → ${this.value}`);
+    });
   });
-
-  // Garante que linhas ocultas fiquem escondidas
+  
+  // 2. Configuração de linhas ocultas
   document.querySelectorAll('tr.hidden').forEach(row => {
     row.style.display = 'none';
   });
-
-  // Liga botões de detalhes
+  
+  // 3. Botões de toggle de detalhes
   document.querySelectorAll('.btn-descricao-toggle').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const codigo = btn.getAttribute("data-codigo");
+    btn.addEventListener('click', function() {
+      const codigo = this.getAttribute("data-codigo");
       toggledesc(codigo);
     });
   });
-
-  // Funcionalidade para o formulário de contas
+  
+  // 4. Formulário de contas
   const tipoContaSelect = document.getElementById('tipo_conta');
   const contaForm = document.getElementById('contaForm');
   
   if (tipoContaSelect) {
     tipoContaSelect.addEventListener('change', toggleIdEmpresaField);
-    toggleIdEmpresaField();
+    toggleIdEmpresaField(); // Inicialização
   }
   
   if (contaForm) {
     contaForm.addEventListener('submit', validateContaForm);
   }
-
-  // Clique nos cards do dashboard
-  document.querySelectorAll('.metric-card').forEach(card => {
-    card.addEventListener('click', () => {
-      console.log("📊 Clicou em:", card.dataset.metric);
+  
+  // 5. Inicialização do Dashboard
+  initializeDashboard();
+  
+  // 6. Botão de refresh (se existir)
+  const refreshBtn = document.querySelector('button[onclick="location.reload()"]');
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      console.log('🔄 Refresh solicitado');
+      location.reload();
     });
-  });
-  
-  // 🎯 ANIMAÇÃO DOS CONTADORES - SUPER OTIMIZADA
-  console.log('🔍 Verificando se estamos na página do dashboard...');
-  const dashboardSection = document.getElementById('dashboard');
-  
-  if (dashboardSection && dashboardSection.style.display !== 'none') {
-    console.log('📊 Dashboard encontrado e visível!');
-    
-    // Método 1: Animação imediata se os elementos já existem
-    const counters = document.querySelectorAll('.metric-value');
-    if (counters.length > 0) {
-      console.log('⚡ Elementos encontrados, iniciando animação imediata...');
-      setTimeout(() => {
-        animateCounters();
-      }, 300);
-    } else {
-      console.log('⏳ Elementos não encontrados, aguardando...');
-      
-      // Método 2: Observer para detectar quando elementos aparecem
-      const observer = new MutationObserver((mutations) => {
-        const newCounters = document.querySelectorAll('.metric-value');
-        if (newCounters.length > 0) {
-          console.log('🔄 Observer detectou novos elementos!');
-          observer.disconnect();
-          setTimeout(() => {
-            animateCounters();
-          }, 100);
-        }
-      });
-      
-      observer.observe(dashboardSection, {
-        childList: true,
-        subtree: true
-      });
-      
-      // Método 3: Fallback com waitForElements
-      waitForElements('.metric-value', () => {
-        console.log('🎯 Fallback: elementos detectados via polling');
-        setTimeout(() => {
-          animateCounters();
-        }, 200);
-      }, 3000);
-    }
-    
-    // Método 4: Fallback final após 2 segundos
-    setTimeout(() => {
-      const finalCounters = document.querySelectorAll('.metric-value');
-      if (finalCounters.length > 0) {
-        console.log('🔄 Fallback final: tentando animação novamente...');
-        
-        // Verifica se algum contador ainda está em 0 (não animado)
-        const hasZeros = Array.from(finalCounters).some(c => {
-          const text = c.textContent.trim();
-          return text === '0' || text === '';
-        });
-        
-        if (hasZeros) {
-          console.log('🎬 Alguns contadores não foram animados, executando novamente...');
-          animateCounters();
-        } else {
-          console.log('✅ Todos os contadores já foram animados!');
-        }
-      } else {
-        console.error('❌ CRÍTICO: Nenhum contador encontrado após 2 segundos!');
-        // Debug detalhado
-        console.log('🔍 Debug: Elementos no dashboard:', dashboardSection.children);
-        console.log('🔍 Debug: Elementos .metric-value:', document.querySelectorAll('.metric-value'));
-        console.log('🔍 Debug: Elementos com "metric":', document.querySelectorAll('[class*="metric"]'));
-      }
-    }, 2000);
-    
-  } else {
-    console.log('ℹ️ Dashboard não encontrado ou não visível na página atual');
   }
+  
+  console.log('✅ Inicialização completa!');
 });
 
-// Função para testar manualmente no console
-window.testCounters = testAnimateCounters;
+// ================================
+// FUNÇÕES GLOBAIS PARA DEBUG
+// ================================
+
+// Expõe funções para debug no console
+window.testDashboardAnimation = testDashboardAnimation;
 window.animateCounters = animateCounters;
+window.updateCurrentDate = updateCurrentDate;
+
+// Debug helper
+window.debugSystem = function() {
+  console.log('🔍 === DEBUG DO SISTEMA ===');
+  console.log('Dashboard:', document.getElementById('dashboard') ? '✅' : '❌');
+  console.log('Contadores:', document.querySelectorAll('.metric-value').length);
+  console.log('Cards:', document.querySelectorAll('.metric-card').length);
+  console.log('Selects de status:', document.querySelectorAll('.statusSelect').length);
+  console.log('Botões de detalhes:', document.querySelectorAll('.btn-descricao-toggle').length);
+};
