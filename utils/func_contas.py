@@ -32,4 +32,4 @@ class Contas:
     @staticmethod
     def editar_conta(dados):
         print("dados a editar", dados)
-        execute_command("UPDATE FROM contas_modelos SET conta_nome,conta_codigo, conta_tipo  WHERE conta_codigo = ?", (dados["id"],))
+        # execute_command("UPDATE FROM contas_modelos SET conta_nome = ? conta_codigo = ? conta_tipo = ?  WHERE conta_codigo = ?", (dados["id"],))

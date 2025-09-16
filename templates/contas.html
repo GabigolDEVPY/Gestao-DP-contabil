@@ -8,7 +8,7 @@
     <h1>Contas e Obrigações</h1>
     <p>Controle todas as contas e obrigações fiscais</p>
   </div>
-  
+
   <div class="content-card">
     <div class="card-header">
       <h3><i class="fas fa-plus-circle"></i> Adicionar Nova Conta</h3>
@@ -104,12 +104,12 @@
                 <h4><i class="fas fa-edit"></i> Editando: {{ conta.conta_nome }}</h4>
               </div>
               <form action="{{ url_for('contas.edit_conta') }}" method="post" class="form-grid">
-                <input type="hidden" name="original_codigo" value="{{ conta.conta_codigo }}">
+                <input type="hidden" name="id" value="{{ conta.conta_codigo }}">
                 <input type="hidden" name="tipo_conta" value="publica">
                 
                 <div class="form-group">
                   <label for="edit_codigo_{{ conta.conta_codigo }}">Código</label>
-                  <input type="number" id="edit_codigo_{{ conta.conta_codigo }}" name="codigo" value="{{ conta.conta_codigo }}" required>
+                  <input type="number" id="edit_codigo_{{ conta.conta_codigo }}" name="conta_codigo" value="{{ conta.conta_codigo }}" required>
                 </div>
                 
                 <div class="form-group">
