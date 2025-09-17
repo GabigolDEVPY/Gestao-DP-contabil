@@ -17,7 +17,7 @@
         <!-- ID da Empresa -->
         <div class="form-group">
           <label for="idEmpresa">Empresa</label>
-          <select id="idEmpresa" name="idEmpresa" class="filter-select" required>
+          <select id="idEmpresa" name="idEmpresa" required>
             <option value="">Selecione a empresa...</option>
             <!-- As opções serão preenchidas dinamicamente pelo backend -->
           </select>
@@ -26,7 +26,7 @@
         <!-- Tipo de Filtro/Período -->
         <div class="form-group">
           <label for="periodo">Período</label>
-          <select id="periodo" name="periodo" class="filter-select">
+          <select id="periodo" name="periodo">
             <option value="ultimoMes">Último mês</option>
             <option value="ultimos3">Últimos 3 meses</option>
             <option value="ultimos6">Últimos 6 meses</option>
@@ -40,7 +40,7 @@
         <!-- Campo de Ano -->
         <div class="form-group">
           <label for="ano">Ano</label>
-          <select id="ano" name="ano" class="filter-select">
+          <select id="ano" name="ano">
             <option value="">Todos os anos</option>
             <option value="2025">2025</option>
             <option value="2024">2024</option>
@@ -54,7 +54,7 @@
         <!-- Status -->
         <div class="form-group">
           <label for="status">Status</label>
-          <select id="status" name="status" class="filter-select">
+          <select id="status" name="status">
             <option value="todos">Todos</option>
             <option value="pendentes">Pendentes</option>
             <option value="feitas">Feitas</option>
@@ -64,7 +64,7 @@
         <!-- Campo de Mês (será mostrado quando período = personalizado) -->
         <div class="form-group" id="mesGroup" style="display: none;">
           <label for="mes">Mês</label>
-          <select id="mes" name="mes" class="filter-select">
+          <select id="mes" name="mes">
             <option value="">Todos os meses</option>
             <option value="01">Janeiro</option>
             <option value="02">Fevereiro</option>
@@ -95,26 +95,4 @@
     </div>
   </section>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const periodoSelect = document.getElementById('periodo');
-      const mesGroup = document.getElementById('mesGroup');
-
-      // Mostrar/ocultar campo de mês baseado na seleção do período
-      periodoSelect.addEventListener('change', function() {
-        if (this.value === 'personalizado') {
-          mesGroup.style.display = 'flex';
-        } else {
-          mesGroup.style.display = 'none';
-          document.getElementById('mes').value = '';
-        }
-      });
-
-      // Reset form functionality
-      const resetBtn = document.querySelector('button[type="reset"]');
-      resetBtn.addEventListener('click', function() {
-        mesGroup.style.display = 'none';
-      });
-    });
-  </script>
 {% endblock %}

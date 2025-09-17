@@ -2,12 +2,6 @@
 // SISTEMA DP & CONTABILIDADE - SCRIPT PRINCIPAL
 // ================================
 
-// Função para controlar abas/tabs
-function openTab(_, id) {
-  document.querySelectorAll('.tab-content').forEach(sec => sec.style.display = 'none');
-  document.getElementById(id).style.display = 'block';
-}
-
 // Função para toggle de detalhes das contas
 function toggledesc(codigo) {
   const row = document.getElementById("detalhe-" + codigo);
@@ -165,28 +159,6 @@ function validateContaForm(event) {
 // DASHBOARD - ANIMAÇÕES E CONTADORES
 // ================================
 
-// Função utilitária para aguardar elementos
-function waitForElements(selector, callback, timeout = 5000) {
-  const startTime = Date.now();
-  
-  function check() {
-    const elements = document.querySelectorAll(selector);
-    
-    if (elements.length > 0) {
-      callback(elements);
-      return;
-    }
-    
-    if (Date.now() - startTime < timeout) {
-      setTimeout(check, 100);
-    } else {
-      console.warn(`Timeout: elementos ${selector} não encontrados em ${timeout}ms`);
-    }
-  }
-  
-  check();
-}
-
 // Função principal para animar contadores
 function animateCounters() {
   console.log('🎬 Iniciando animação dos contadores...');
@@ -264,37 +236,6 @@ function animateCounters() {
       requestAnimationFrame(updateCounter);
     }, index * 100);
   });
-}
-
-// Função para testar animação manualmente
-function testDashboardAnimation() {
-  console.log('🧪 === TESTE MANUAL DA ANIMAÇÃO ===');
-  
-  const dashboard = document.getElementById('dashboard');
-  if (!dashboard) {
-    console.error('❌ Dashboard não encontrado!');
-    return;
-  }
-  
-  const counters = document.querySelectorAll('.metric-value');
-  console.log(`Encontrados ${counters.length} contadores`);
-  
-  if (counters.length === 0) {
-    console.error('❌ Nenhum contador encontrado!');
-    console.log('Elementos disponíveis:');
-    dashboard.querySelectorAll('*').forEach(el => {
-      if (el.className && el.className.includes('metric')) {
-        console.log(`- ${el.tagName}.${el.className}: "${el.textContent}"`);
-      }
-    });
-    return;
-  }
-  
-  counters.forEach((counter, i) => {
-    console.log(`${i + 1}. "${counter.textContent.trim()}" [${counter.className}]`);
-  });
-  
-  animateCounters();
 }
 
 // Função para atualizar data atual
@@ -380,29 +321,7 @@ function initializeDashboard() {
 function initializeContasPage() {
   console.log('📊 Inicializando página de contas...');
 
-  // 1. Configura todos os botões de edição
-  document.querySelectorAll('.btn-outline').forEach(btn => {
-    // Verifica se é um botão de edição baseado no onclick
-    const onclickAttr = btn.getAttribute('onclick');
-    if (onclickAttr && onclickAttr.includes('toggleForm(')) {
-      // Extrai o ID do formulário do onclick
-      const formIdMatch = onclickAttr.match(/toggleForm\('([^']+)'\)/);
-      if (formIdMatch) {
-        const formId = formIdMatch[1];
-        
-        // Remove o onclick inline e adiciona event listener
-        btn.removeAttribute('onclick');
-        btn.addEventListener('click', function(e) {
-          e.preventDefault();
-          toggleEditForm(formId);
-        });
-        
-        console.log(`✅ Event listener adicionado para: ${formId}`);
-      }
-    }
-  });
-
-  // 2. Inicializa contadores da página de contas
+  // 1. Inicializa contadores da página de contas
   const contadores = document.querySelectorAll('#contas .metric-value');
   if (contadores.length > 0) {
     console.log(`📊 Animando ${contadores.length} contadores da página de contas`);
@@ -425,13 +344,46 @@ function initializeContasPage() {
     });
   }
 
-  // 3. Garante que todos os formulários de edição começem ocultos
+  // 2. Garante que todos os formulários de edição começem ocultos
   document.querySelectorAll('tr[id^="editForm-"]').forEach(row => {
     row.classList.add('hidden');
     row.style.display = 'none';
   });
 
   console.log('✅ Página de contas inicializada!');
+}
+
+// ================================
+// INICIALIZAÇÃO ESPECÍFICA PARA RELATÓRIOS
+// ================================
+
+function initializeRelatoriosPage() {
+  console.log('📊 Inicializando página de relatórios...');
+
+  const periodoSelect = document.getElementById('periodo');
+  const mesGroup = document.getElementById('mesGroup');
+
+  if (periodoSelect && mesGroup) {
+    // Mostrar/ocultar campo de mês baseado na seleção do período
+    periodoSelect.addEventListener('change', function() {
+      if (this.value === 'personalizado') {
+        mesGroup.style.display = 'flex';
+      } else {
+        mesGroup.style.display = 'none';
+        document.getElementById('mes').value = '';
+      }
+    });
+
+    // Reset form functionality
+    const resetBtn = document.querySelector('button[type="reset"]');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', function() {
+        mesGroup.style.display = 'none';
+      });
+    }
+  }
+
+  console.log('✅ Página de relatórios inicializada!');
 }
 
 // ================================
@@ -456,8 +408,8 @@ document.addEventListener('DOMContentLoaded', function() {
     row.style.display = 'none';
   });
   
-  // 3. Botões de toggle de detalhes (para outras páginas)
-  document.querySelectorAll('.btn-descricao-toggle').forEach(btn => {
+  // 3. Botões de toggle de detalhes (para página de gerenciamento)
+  document.querySelectorAll('.btn-descricao-toggle[data-codigo]').forEach(btn => {
     btn.addEventListener('click', function() {
       const codigo = this.getAttribute("data-codigo");
       toggledesc(codigo);
@@ -480,13 +432,37 @@ document.addEventListener('DOMContentLoaded', function() {
   // 5. Inicialização do Dashboard (se existir)
   initializeDashboard();
   
-  // 6. Inicialização específica da página de contas (se existir)
+  // 6. Configura todos os botões de edição
+  document.querySelectorAll('[data-toggle-edit]').forEach(btn => {
+    const formId = btn.getAttribute('data-toggle-edit');
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      toggleEditForm(formId);
+    });
+  });
+
+  // 7. Configura botões de cancelar edição
+  document.querySelectorAll('[data-cancel-edit]').forEach(btn => {
+    const formId = btn.getAttribute('data-cancel-edit');
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      toggleEditForm(formId); // vai fechar o form
+    });
+  });
+
+  // 8. Inicialização específica da página de contas (se existir)
   const contasSection = document.getElementById('contas');
   if (contasSection) {
     initializeContasPage();
   }
+
+  // 8.1. Inicialização específica da página de relatórios (se existir)
+  const relatoriosSection = document.getElementById('relatorios');
+  if (relatoriosSection) {
+    initializeRelatoriosPage();
+  }
   
-  // 7. Botão de refresh (se existir)
+  // 9. Botão de refresh (se existir)
   const refreshBtn = document.querySelector('button[onclick="location.reload()"]');
   if (refreshBtn) {
     refreshBtn.addEventListener('click', function(e) {
@@ -504,39 +480,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // ================================
 
 // Expõe funções para debug no console
-window.testDashboardAnimation = testDashboardAnimation;
 window.animateCounters = animateCounters;
 window.updateCurrentDate = updateCurrentDate;
 window.toggleEditForm = toggleEditForm;
 window.toggleForm = toggleForm;
-
-// Debug helper
-window.debugSystem = function() {
-  console.log('🔍 === DEBUG DO SISTEMA ===');
-  console.log('Dashboard:', document.getElementById('dashboard') ? '✅' : '❌');
-  console.log('Contas section:', document.getElementById('contas') ? '✅' : '❌');
-  console.log('Contadores:', document.querySelectorAll('.metric-value').length);
-  console.log('Cards:', document.querySelectorAll('.metric-card').length);
-  console.log('Selects de status:', document.querySelectorAll('.statusSelect').length);
-  console.log('Botões de detalhes:', document.querySelectorAll('.btn-descricao-toggle').length);
-  console.log('Formulários de edição:', document.querySelectorAll('tr[id^="editForm-"]').length);
-  console.log('Botões de edição:', document.querySelectorAll('.btn-outline').length);
-};
-
-// Configura todos os botões de edição
-document.querySelectorAll('[data-toggle-edit]').forEach(btn => {
-  const formId = btn.getAttribute('data-toggle-edit');
-  btn.addEventListener('click', function(e) {
-    e.preventDefault();
-    toggleEditForm(formId);
-  });
-});
-
-// Configura botões de cancelar edição
-document.querySelectorAll('[data-cancel-edit]').forEach(btn => {
-  const formId = btn.getAttribute('data-cancel-edit');
-  btn.addEventListener('click', function(e) {
-    e.preventDefault();
-    toggleEditForm(formId); // vai fechar o form
-  });
-});

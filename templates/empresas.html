@@ -69,29 +69,6 @@
           <div class="metric-footer">Filiais vinculadas</div>
         </div>
       </div>
-
-      <div class="metric-card">
-        <div class="metric-icon pendentes">
-          <i class="fas fa-clock"></i>
-        </div>
-        <div class="metric-content">
-          <h3>Contas Pendentes</h3>
-          <div class="metric-value">
-            {% set total_contas_pendentes = 0 %}
-            {% for empresa in empresas %}
-              {% if empresa.contas_pendentes %}
-                {% set total_contas_pendentes = total_contas_pendentes + empresa.contas_pendentes|length %}
-              {% endif %}
-            {% endfor %}
-            {{ total_contas_pendentes }}
-          </div>
-          <div class="metric-change warning">
-            <i class="fas fa-exclamation-triangle"></i>
-            Requerem atenção
-          </div>
-        </div>
-      </div>
-
       <div class="metric-card">
         <div class="metric-icon fazendo">
           <i class="fas fa-calendar-alt"></i>
@@ -168,11 +145,11 @@
 
         <!-- Ações Principais -->
         <div class="form-grid" style="margin-top: 16px;">
-          <button type="button" class="btn btn-primary btn-descricao-toggle" onclick="toggleForm('periodo-{{ empresa.id }}')">
+          <button type="button" class="btn btn-primary" onclick="toggleForm('periodo-{{ empresa.id }}')">
             <i class="fas fa-plus"></i> Criar Período
             <span id="toggle-icon-periodo-{{ empresa.id }}">+</span>
           </button>
-          <button type="button" class="btn btn-secondary btn-descricao-toggle" onclick="toggleForm('form-filial-{{ empresa.id }}')">
+          <button type="button" class="btn btn-secondary" onclick="toggleForm('form-filial-{{ empresa.id }}')">
             <i class="fas fa-building"></i> Nova Filial
             <span id="toggle-icon-form-filial-{{ empresa.id }}">+</span>
           </button>
@@ -303,14 +280,14 @@
             <div class="empresa-item" style="margin-bottom: 16px;">
               <div class="empresa-header">
                 <strong class="empresa-nome">{{ filial.empresa_nome }}</strong>
-                <span class="status-badge status-pending">ID: {{ filial.id_filial }}</span>
+                <span class="status-badge status-pending">ID: {{ filial.empresa_id }}</span>
               </div>
               <div class="empresa-details">
                 <span class="empresa-cnpj">CNPJ: {{ filial.empresa_cnpj }}</span>
               </div>
 
               <!-- Contas da Filial -->
-              <button type="button" class="btn btn-outline btn-descricao-toggle" onclick="toggleForm('contas-filial-{{ filial.id }}')">
+              <button type="button" class="btn btn-outline" onclick="toggleForm('contas-filial-{{ filial.id }}')">
                 <i class="fas fa-list"></i> Ver Contas ({{ filial.contas_pendentes|length if filial.contas_pendentes else 0 }})
                 <span id="toggle-icon-contas-filial-{{ filial.id }}">+</span>
               </button>

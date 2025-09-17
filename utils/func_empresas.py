@@ -32,6 +32,7 @@ class Empresa:
                 status_periodo(empresa_id=filial["id_filial"], tipo="Filial")
                 filial["contas_pendentes"] = execute_command('SELECT conta_nome, conta_data FROM contas WHERE empresa_id = ? AND conta_status != "Feito" ', (filial["id_filial"],)) 
             empresas.append(empresa) 
+        print(empresas)    
         return empresas 
     
 
