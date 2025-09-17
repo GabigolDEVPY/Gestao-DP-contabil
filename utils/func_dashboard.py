@@ -13,5 +13,4 @@ class Dashboard:
         "pendente":  sum(1 for dado in dados if dado.get("conta_status") =="Pendente"),
         "feito": sum(1 for dado in dados if dado.get("conta_status") =="Feito")
         }
-        print(contas)
         return contas

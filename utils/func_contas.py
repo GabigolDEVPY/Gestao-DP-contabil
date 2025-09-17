@@ -28,7 +28,6 @@ class Contas:
     def deletar_conta(dados):
         try:
             if "empresa_id" in dados:
-                print("conta_privadaaaaaa")
                 execute_command("DELETE FROM contas_privadas WHERE conta_codigo = ?", (dados["id"],))
             execute_command("DELETE FROM contas_modelos WHERE conta_codigo = ?", (dados["id"],))
         except sqlite3.Error as e: 
@@ -40,7 +39,6 @@ class Contas:
             if dados["tipo_conta"] == "publica":
                 dados.pop("tipo_conta")
                 execute_command("UPDATE contas_modelos SET conta_codigo = ?, conta_nome = ?, conta_tipo = ? WHERE conta_codigo = ?", tuple(dados.values()))
-            print("privadassssssss")    
             execute_command("UPDATE contas_privadas SET conta_codigo = ?, conta_nome = ?, conta_tipo = ? WHERE conta_codigo = ?", tuple(dados.values()))    
         except sqlite3.IntegrityError as e: 
             if "UNIQUE constraint failed" in str(e):
