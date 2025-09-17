@@ -8,6 +8,36 @@
     <h1>Contas e Obrigações</h1>
     <p>Controle todas as contas e obrigações fiscais</p>
   </div>
+  <!-- Resumo e Estatísticas -->
+  <div class="content-card">
+    <div class="card-header"><h3><i class="fas fa-chart-bar"></i> Resumo das Contas</h3></div>
+    <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+      <div class="metric-card">
+        <div class="metric-icon contas"><i class="fas fa-calculator"></i></div>
+        <div class="metric-content">
+          <h3>Total de Contas</h3>
+          <div class="metric-value">{{ (contas|length if contas else 0) + (contas_privadas|length if contas_privadas else 0) }}</div>
+          <div class="metric-change neutral"><i class="fas fa-list"></i> Todas as categorias</div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon empresas"><i class="fas fa-globe"></i></div>
+        <div class="metric-content">
+          <h3>Contas Públicas</h3>
+          <div class="metric-value">{{ contas|length if contas else 0 }}</div>
+          <div class="metric-change positive"><i class="fas fa-check"></i> Padrão do sistema</div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon pendentes"><i class="fas fa-lock"></i></div>
+        <div class="metric-content">
+          <h3>Contas Privadas</h3>
+          <div class="metric-value">{{ contas_privadas|length if contas_privadas else 0 }}</div>
+          <div class="metric-change warning"><i class="fas fa-building"></i> Por empresa</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="content-card">
     <div class="card-header">
@@ -104,7 +134,6 @@
                 <h4><i class="fas fa-edit"></i> Editando: {{ conta.conta_nome }}</h4>
               </div>
               <form action="{{ url_for('contas.edit_conta') }}" method="post" class="form-grid">
-                <input type="hidden" name="id" value="{{ conta.conta_codigo }}">
                 <input type="hidden" name="tipo_conta" value="publica">
                 
                 <div class="form-group">
@@ -124,7 +153,7 @@
                     <option value="Filial" {% if conta.conta_tipo == 'Filial' %}selected{% endif %}>Filial</option>
                   </select>
                 </div>
-                
+                <input type="hidden" name="id" value="{{ conta.conta_codigo }}">
                 <div class="form-actions">
                   <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save"></i> Salvar Alterações
@@ -245,35 +274,5 @@
     </div>
   </div>
 
-  <!-- Resumo e Estatísticas -->
-  <div class="content-card">
-    <div class="card-header"><h3><i class="fas fa-chart-bar"></i> Resumo das Contas</h3></div>
-    <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
-      <div class="metric-card">
-        <div class="metric-icon contas"><i class="fas fa-calculator"></i></div>
-        <div class="metric-content">
-          <h3>Total de Contas</h3>
-          <div class="metric-value">{{ (contas|length if contas else 0) + (contas_privadas|length if contas_privadas else 0) }}</div>
-          <div class="metric-change neutral"><i class="fas fa-list"></i> Todas as categorias</div>
-        </div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-icon empresas"><i class="fas fa-globe"></i></div>
-        <div class="metric-content">
-          <h3>Contas Públicas</h3>
-          <div class="metric-value">{{ contas|length if contas else 0 }}</div>
-          <div class="metric-change positive"><i class="fas fa-check"></i> Padrão do sistema</div>
-        </div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-icon pendentes"><i class="fas fa-lock"></i></div>
-        <div class="metric-content">
-          <h3>Contas Privadas</h3>
-          <div class="metric-value">{{ contas_privadas|length if contas_privadas else 0 }}</div>
-          <div class="metric-change warning"><i class="fas fa-building"></i> Por empresa</div>
-        </div>
-      </div>
-    </div>
-  </div>
 </section>
 {% endblock %}
