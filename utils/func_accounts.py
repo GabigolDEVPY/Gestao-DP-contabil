@@ -3,15 +3,15 @@ sys.dont_write_bytecode = True
 from utils.db_comands import execute_command
 import sqlite3
 
-class Contas:
+class Accounts:
     @staticmethod
-    def retornar_contas():
+    def return_accounts():
         contas = execute_command("SELECT * FROM contas_modelos")
         contas_privadas = execute_command("SELECT * FROM contas_privadas")
         return contas, contas_privadas
     
     @staticmethod
-    def criar_contas(dados):
+    def create_accounts(dados):
         del dados["tipo_conta"]
         try:
             if "id_empresa" in dados:
@@ -25,7 +25,7 @@ class Contas:
         return
     
     @staticmethod
-    def deletar_conta(dados):
+    def delete_account(dados):
         try:
             if "empresa_id" in dados:
                 execute_command("DELETE FROM contas_privadas WHERE conta_codigo = ?", (dados["id"],))
@@ -34,7 +34,7 @@ class Contas:
             return "Erro ao excluir conta"            
 
     @staticmethod
-    def editar_conta(dados):
+    def edit_account(dados):
         try:
             if dados["tipo_conta"] == "publica":
                 dados.pop("tipo_conta")

@@ -49,7 +49,7 @@
       </div>
     </div>
     <div id="contaFormContainer" class="hidden">
-      <form action="{{ url_for('contas.criar_conta') }}" method="post" class="form-grid" id="contaForm">
+      <form action="{{ url_for('accounts.create_account') }}" method="post" class="form-grid" id="contaForm">
         <div class="form-group">
           <label for="idEmpresa">ID Empresa</label>
           <input type="text" id="idEmpresa" name="id_empresa" placeholder="ID da empresa (somente contas privadas)">
@@ -120,7 +120,7 @@
                 <button type="button" class="btn btn-outline" data-toggle-edit="editForm-publica-{{ conta.conta_codigo }}">
                   <i class="fas fa-edit"></i>
                 </button>
-                <form action="{{ url_for('contas.delete_conta') }}" method="post" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir esta conta?');">
+                <form action="{{ url_for('accounts.delete_account') }}" method="post" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir esta conta?');">
                   <input type="hidden" name="id" value="{{ conta.conta_codigo }}">
                   <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                 </form>
@@ -133,7 +133,7 @@
               <div class="card-header">
                 <h4><i class="fas fa-edit"></i> Editando: {{ conta.conta_nome }}</h4>
               </div>
-              <form action="{{ url_for('contas.edit_conta') }}" method="post" class="form-grid">
+              <form action="{{ url_for('accounts.edit_account') }}" method="post" class="form-grid">
                 <input type="hidden" name="tipo_conta" value="publica">
                 
                 <div class="form-group">
@@ -212,7 +212,7 @@
                 <button type="button" class="btn btn-outline" data-toggle-edit="editForm-privada-{{ conta.empresa_id }}-{{ conta.conta_codigo }}">
                   <i class="fas fa-edit"></i>
                 </button>
-                <form action="{{ url_for('contas.delete_conta') }}" method="post" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir esta conta privada?');">
+                <form action="{{ url_for('accounts.delete_account') }}" method="post" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir esta conta privada?');">
                   <input type="hidden" name="empresa_id" value="{{ conta.empresa_id }}">
                   <input type="hidden" name="id" value="{{ conta.conta_codigo }}">
                   <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
@@ -226,7 +226,7 @@
               <div class="card-header">
                 <h4><i class="fas fa-edit"></i> Editando: {{ conta.conta_nome }} (ID Empresa: {{ conta.empresa_id }})</h4>
               </div>
-              <form action="{{ url_for('contas.edit_conta') }}" method="post" class="form-grid">
+              <form action="{{ url_for('accounts.edit_account') }}" method="post" class="form-grid">
                 <input type="hidden" name="original_codigo" value="{{ conta.conta_codigo }}">
                 <input type="hidden" name="original_empresa_id" value="{{ conta.empresa_id }}">
                 <input type="hidden" name="tipo_conta" value="privada">

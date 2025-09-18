@@ -1,3 +1,6 @@
+from colorama import init, Fore, Style
+
+init(autoreset=True)
 
 def printar():
     banner_lines = [
@@ -9,4 +12,4 @@ def printar():
         " |_|  |_|\\__,_|\\___|_|\\_\\_||_|    |_|\\_\\"
     ]
     for p in banner_lines:
-        print(p)
+        print(Fore.GREEN + p + Style.RESET_ALL)  # verde
