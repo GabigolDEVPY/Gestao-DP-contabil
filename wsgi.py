@@ -1,12 +1,13 @@
 import sys
 sys.dont_write_bytecode = True
-
 from waitress import serve
 from app import app
 import logging
 from werkzeug.middleware.proxy_fix import ProxyFix
 from flask import request
-from banner import printar
+from utils.db_comands import create_database
+
+
 @app.before_request
 def log_request_info():
     app.logger.info(f"Request: {request.method} {request.url}")
@@ -21,6 +22,6 @@ if __name__ == "__main__":
     port = 5600
     logging.basicConfig(level=logging.INFO)
     app.wsgi_app = ProxyFix(app.wsgi_app)
-    printar()
+    create_database()
     print(f"Server rodando na porta 5600")
-    serve(app, host="0.0.0.0", port=5600)
+    serve(app, host="0.0.0.0", port=port)
