@@ -19,7 +19,6 @@ def execute_command(command, value=None):
             cursor.execute(command)
         else:
             cursor.execute(command, value)
-        
         if command.strip().upper().startswith("SELECT"):
             rows = cursor.fetchall()
             return [dict(row) for row in rows]  
