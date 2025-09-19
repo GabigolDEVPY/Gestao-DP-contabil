@@ -31,9 +31,9 @@ def execute_command(command, value=None):
         conn.close()
 
 def create_database():
-    print("Verificando Banco de dados")
+    print("Verificando Banco de dados...")
     if not CAMINHO_DB.exists():
-        print("Criando Banco de dados")
+        print("Criando Banco de dados...")
         conn = sqlite3.connect(CAMINHO_DB, timeout=30, check_same_thread=False)
         cursor = conn.cursor()
         with open(DATA_BASE_COMMANDS, "r", encoding="utf-8") as f:
@@ -42,5 +42,5 @@ def create_database():
         conn.commit()
         cursor.close()
         conn.close() 
-        print("Banco de dados criado")
+        print("Banco de dados criado...")
         return
