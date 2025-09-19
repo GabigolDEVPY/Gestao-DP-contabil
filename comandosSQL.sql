@@ -28,14 +28,14 @@ CREATE TABLE IF NOT EXISTS contas (
     conta_codigo VARCHAR(10) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS contas_modelos (
+CREATE TABLE IF NOT EXISTS accounts_models (
     id INTEGER PRIMARY KEY AUTOINCREMENT ,
     conta_nome VARCHAR(60) DEFAULT "RANDOM" UNIQUE,
     conta_codigo VARCHAR(10) NOT NULL UNIQUE,
     conta_tipo VARCHAR(15) DEFAULT "MATRIZ"
 );
 
-CREATE TABLE IF NOT EXISTS contas_privadas (
+CREATE TABLE IF NOT EXISTS private_accounts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     empresa_id INT NOT NULL,
     conta_nome VARCHAR(60) DEFAULT "RANDOM",
