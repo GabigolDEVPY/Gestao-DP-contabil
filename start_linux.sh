@@ -1,18 +1,9 @@
 #!/bin/bash
 
-# Verifica se o python3.12-venv tá instalado
-if ! dpkg -s python3.12-venv >/dev/null 2>&1; then
-    echo "Pacote python3.12-venv não encontrado. Instalando..."
-    sudo apt update
-    sudo apt install python3.12-venv -y
-fi
-
 if [ ! -d ".venv" ]; then
     echo "Criando Ambiente Virtual..."
     python3 -m venv .venv
     source .venv/bin/activate
-    echo "Atualizando pip..."
-    pip install --upgrade pip
     echo "Instalando Dependências..."
     pip install -r requirements.txt
 else

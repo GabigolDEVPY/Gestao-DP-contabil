@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS empresas_filiais (
     FOREIGN KEY (empresa_id) REFERENCES empresas(empresa_id)
 );
 
-CREATE TABLE IF NOT EXISTS contas (
+CREATE TABLE IF NOT EXISTS accounts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     empresa_id INT NOT NULL,
     conta_nome VARCHAR(50) DEFAULT "Random",
