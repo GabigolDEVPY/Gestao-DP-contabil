@@ -5,7 +5,7 @@ from utils.db_comands import execute_command
 
 class Gerenciamento:
     @staticmethod
-    def retornar_periodo(dados):
+    def return_period(dados):
         if "new" in dados:
             del dados["new"]
         session["dados"] = dados

@@ -10,5 +10,4 @@ def return_home():
 
 @dashboard_bp.route("/dashboard", methods=["GET"])
 def return_dashboard():
-    contas = Dashboard.return_dashboard()
-    return render_template("dashboard.html", contas=contas)
+    return render_template("dashboard.html", contas=Dashboard.return_dashboard())
