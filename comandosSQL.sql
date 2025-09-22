@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS empresas_filiais (
     FOREIGN KEY (empresa_id) REFERENCES empresas(empresa_id)
 );
 
-CREATE TABLE IF NOT EXISTS accounts (
+CREATE TABLE IF NOT EXISTS contas (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     empresa_id INT NOT NULL,
     conta_nome VARCHAR(50) DEFAULT "Random",
@@ -28,14 +28,14 @@ CREATE TABLE IF NOT EXISTS accounts (
     conta_codigo VARCHAR(10) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS accounts_models (
+CREATE TABLE IF NOT EXISTS contas_modelos (
     id INTEGER PRIMARY KEY AUTOINCREMENT ,
     conta_nome VARCHAR(60) DEFAULT "RANDOM" UNIQUE,
     conta_codigo VARCHAR(10) NOT NULL UNIQUE,
     conta_tipo VARCHAR(15) DEFAULT "MATRIZ"
 );
 
-CREATE TABLE IF NOT EXISTS private_accounts (
+CREATE TABLE IF NOT EXISTS contas_privadas (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     empresa_id INT NOT NULL,
     conta_nome VARCHAR(60) DEFAULT "RANDOM",

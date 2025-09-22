@@ -1,23 +1,18 @@
-#!/bin/bash
+@echo off
+REM ===== Script para Windows 11 =====
 
-# Verifica se o python3.12-venv tá instalado
-if ! dpkg -s python3.12-venv >/dev/null 2>&1; then
-    echo "Pacote python3.12-venv não encontrado. Instalando..."
-    sudo apt update
-    sudo apt install python3.12-venv -y
-fi
-
-if [ ! -d ".venv" ]; then
-    echo "Criando Ambiente Virtual..."
-    python3 -m venv .venv
-    source .venv/bin/activate
-    echo "Atualizando pip..."
-    pip install --upgrade pip
-    echo "Instalando Dependências..."
+REM Verifica se a pasta .venv existe
+IF NOT EXIST ".venv" (
+    echo Criando Ambiente Virtual...
+    python -m venv .venv
+    call .venv\Scripts\activate.bat
+    echo Atualizando pip...
+    python -m pip install --upgrade pip
+    echo Instalando Dependencias...
     pip install -r requirements.txt
-else
-    echo "Ativando Servidor..."
-    source .venv/bin/activate
-fi
+) ELSE (
+    echo Ativando Servidor...
+    call .venv\Scripts\activate.bat
+)
 
-python3 wsgi.py
+python wsgi.py

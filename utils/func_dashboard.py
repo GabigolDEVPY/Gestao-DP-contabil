@@ -6,7 +6,7 @@ import sqlite3
 class Dashboard:
     @staticmethod
     def return_dashboard():
-        data = execute_command("SELECT * FROM accounts")
+        data = execute_command("SELECT * FROM contas")
         accounts = {
         "empresas": len(execute_command("SELECT * FROM empresas")),
         "fazendo":  sum(1 for dado in data if dado.get("conta_status") =="Fazendo"),
